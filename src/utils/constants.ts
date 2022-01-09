@@ -1,0 +1,5 @@
+export enum MODES {
+    BAR_RELATIVE = 'BAR RELATIVE',
+    BAR_ABSOLUTE = 'BAR ABSOLUTE',
+    RADIAL = 'RADIAL',
+}

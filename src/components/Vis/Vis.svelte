@@ -1,5 +1,12 @@
 <script>
+	import { csvParse, autoType } from 'd3';
+
+	import rawData from '$src/data/sleepLogs.csv?raw';
+
 	import { visMode } from '$src/store';
+
+	let data = csvParse(rawData, autoType);
+	console.log(`data`, data);
 
 	let width = 500;
 	let height = 200;

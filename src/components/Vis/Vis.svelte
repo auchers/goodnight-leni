@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as d3 from 'd3';
+	import { fade } from 'svelte/transition';
 
 	import type { SleepLog } from '$src/data/types';
 	import { visMode } from '$src/store';
@@ -44,10 +45,8 @@
 	// Y SCALE
 	$: yStartMetric = $visMode === MODES.BAR_ABSOLUTE ? KEYS.TIME_TO_START : KEYS.STD_TIME_TO_START;
 	$: yEndMetric = $visMode === MODES.BAR_ABSOLUTE ? KEYS.TIME_TO_END : KEYS.STD_TIME_TO_END;
-
 	$: yRange =
 		$visMode === MODES.RADIAL ? [radialBarHeight, 0] : [height - padding.bottom, padding.top];
-
 	$: yScale = d3
 		.scaleLinear()
 		.domain(
@@ -84,14 +83,16 @@
 		</defs>
 		<g class="x-axis" />
 		<g class="y-axis">
-			{#each yScale.ticks() as tick, index (index)}
-				<g class="tick tick--{tick}" transform="translate(0,{yScale(tick)})">
-					<line x2={width - padding.right} />
-					<text dy="-.5em"
-						>{$visMode === MODES.BAR_ABSOLUTE ? FORMATTERS.yTickFormat(tick) : `${tick} hr`}</text
-					>
-				</g>
-			{/each}
+			{#if $visMode !== MODES.RADIAL}
+				{#each yScale.ticks() as tick, index}
+					<g class="tick tick--{tick}" transform="translate(0,{yScale(tick)})" transition:fade>
+						<line x2={width - padding.right} />
+						<text dy="-.5em"
+							>{$visMode === MODES.BAR_ABSOLUTE ? FORMATTERS.yTickFormat(tick) : `${tick} hr`}</text
+						>
+					</g>
+				{/each}
+			{/if}
 		</g>
 		<g
 			class="bars"
@@ -118,6 +119,7 @@
 							filter:url(#glow);
 							transform: translate(0, {yScale(log[yEndMetric])}px);
 							"
+							in:fade={{ delay: i * 50, duration: 1000 }}
 						/>
 					{/each}
 				</g>

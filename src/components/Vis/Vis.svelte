@@ -25,10 +25,8 @@
 		});
 	});
 
-	console.log(`data`, data);
-
-	let width = 500;
-	let height = 200;
+	let width;
+	let height;
 
 	// X SCALE
 	$: xRange =

@@ -1,6 +1,20 @@
 :root {
-	--background-color: #0f102e;
+	// --background-color: #0f102e;
+	--background-color: #0c1a22;
+	// --background-color: #3C3C3C;
 	--text-color-grey: #bdbdbd;
+}
+
+@font-face {
+	font-family: 'action_manbold_italic';
+	src: url('assets/Action_Man_Bold_Italic-webfont.eot');
+	src: url('assets/Action_Man_Bold_Italic-webfont.eot?#iefix') format('embedded-opentype'),
+		url('assets/Action_Man_Bold_Italic-webfont.woff2') format('woff2'),
+		url('assets/Action_Man_Bold_Italic-webfont.woff') format('woff'),
+		url('assets/Action_Man_Bold_Italic-webfont.ttf') format('truetype'),
+		url('assets/Action_Man_Bold_Italic-webfont.svg#action_manbold_italic') format('svg');
+	font-weight: normal;
+	font-style: normal;
 }
 
 * {
@@ -12,4 +26,10 @@
 body {
 	background-color: var(--background-color);
 	color: var(--text-color-grey);
+	font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+		sans-serif;
+}
+
+header {
+	font-family: 'action_manbold_italic';
 }

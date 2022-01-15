@@ -5,9 +5,9 @@
 	import { visMode } from '$src/store';
 
 	import rawData from '$src/data/sleepLogs.csv?raw';
-	import { FORMATTERS, KEYS, MODES } from '$src/utils/constants';
+	import { COLOR_PALATTE, FORMATTERS, KEYS, MODES } from '$src/utils/constants';
 
-	let padding = { top: 150, bottom: 150, left: 50, right: 50 };
+	let padding = { top: 50, bottom: 150, left: 40, right: 50 };
 
 	let parsedData = d3.csvParse<SleepLog>(rawData, d3.autoType).filter((d) => d.Type === 'sleep');
 
@@ -26,12 +26,23 @@
 	let width = 500;
 	let height = 200;
 
+	// $: barHeight =
+
+	// X SCALE
+	$: xRange =
+		$visMode === MODES.RADIAL
+			? [-Math.PI / 2, 1.5 * Math.PI]
+			: [padding.left, width - padding.right];
+
 	$: xScale = d3
 		.scaleBand()
 		.domain(data.map(([d]) => d))
-		.range([padding.left, width - padding.right])
-		.padding(0.15);
+		.range(xRange)
+		.padding(0.2);
+	$: innerRadius = 70;
+	$: outerRadius = height - padding.bottom - padding.top + innerRadius;
 
+	// Y SCALE
 	$: yStartMetric = $visMode === MODES.BAR_ABSOLUTE ? KEYS.TIME_TO_START : KEYS.STD_TIME_TO_START;
 	$: yEndMetric = $visMode === MODES.BAR_ABSOLUTE ? KEYS.TIME_TO_END : KEYS.STD_TIME_TO_END;
 
@@ -42,30 +53,71 @@
 				data.map(([, arr]) => arr.map((d) => [d[yStartMetric], d[yEndMetric]]).flat()).flat()
 			)
 		)
-		.range([height - padding.bottom, padding.top]);
+		.range([height - padding.bottom, padding.top])
+		.nice();
+
+	// Y SCALE
+	$: colorScale = d3.scaleQuantize(COLOR_PALATTE).domain([0, 12]).nice(); // sleep duration
+
+	$: translateGroup = (date: string) => {
+		if ($visMode === MODES.RADIAL) {
+			const theta = xScale(date);
+			const [x, y] = [outerRadius * Math.cos(theta), outerRadius * Math.sin(theta)];
+			console.log(`translate(${x}px, ${y}px)  rotate(${theta}rad)`);
+			return `translate(${x}px, ${y}px)  rotate(${theta + Math.PI * 0.5}rad )`;
+		} else return `translate(${xScale(date)}px, 0)`;
+	};
 </script>
 
 <div class="vis" bind:clientWidth={width} bind:clientHeight={height}>
 	<svg>
+		<defs>
+			<filter id="glow">
+				<feGaussianBlur stdDeviation=".25" result="coloredBlur" />
+				<feMerge>
+					<feMergeNode in="coloredBlur" />
+					<feMergeNode in="SourceGraphic" />
+				</feMerge>
+			</filter>
+		</defs>
 		<g class="x-axis" />
-		<g class="y-axis" />
-		<g class="bars">
-			{#if data.length}
-				{#each data as [date, logs]}
-					<g>
-						{#each logs as log}
-							<rect
-								y={yScale(log[yEndMetric])}
-								height={yScale(log[yStartMetric]) - yScale(log[yEndMetric])}
-								x={xScale(date)}
-								width={xScale.bandwidth()}
-								fill={'white'}
-								rx="3"
-							/>
-						{/each}
-					</g>
-				{/each}
-			{/if}
+		<g class="y-axis">
+			{#each yScale.ticks() as tick, index (index)}
+				<g class="tick tick--{tick}" transform="translate(0,{yScale(tick)})">
+					<line x2={width - padding.right} />
+					<text dy="-.5em">{FORMATTERS.yTickFormat(tick)}</text>
+				</g>
+			{/each}
+		</g>
+		<g
+			class="bars"
+			style="transform: {$visMode === MODES.RADIAL
+				? `translate(${width / 2}px,${height / 2}px )`
+				: `translate(0,0 )`};"
+		>
+			{#each data as [date, logs], i (date)}
+				<g
+					style="
+				transform: {translateGroup(date)};
+				transition-delay: {i * 5}ms;
+				"
+				>
+					{#each logs as log, index (index)}
+						<rect
+							height={yScale(log[yStartMetric]) - yScale(log[yEndMetric])}
+							width={$visMode === MODES.RADIAL
+								? xScale.bandwidth() * innerRadius
+								: xScale.bandwidth()}
+							fill={colorScale(log.timeToEnd - log.timeToStart)}
+							rx="3"
+							style="q
+							filter:url(#glow);
+							transform: translate(0, {yScale(log[yEndMetric])}px);
+							"
+						/>
+					{/each}
+				</g>
+			{/each}
 		</g>
 	</svg>
 </div>
@@ -80,5 +132,29 @@
 	.vis svg {
 		width: 100%;
 		height: 100%;
+		padding: 1em;
+	}
+
+	.bars {
+		transition: transform 500ms;
+		rect,
+		g {
+			transition: transform 500ms, width 500ms;
+		}
+	}
+
+	.y-axis {
+		.tick {
+			fill: var(--text-color-grey);
+
+			line {
+				stroke: var(--text-color-grey);
+				stroke-dasharray: 3 5;
+				stroke-width: 0.5px;
+			}
+			text {
+				font-size: 0.8em;
+			}
+		}
 	}
 </style>

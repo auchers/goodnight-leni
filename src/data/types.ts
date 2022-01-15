@@ -15,5 +15,6 @@ export interface SleepLog {
     stdTimeToStart: number,/**Time the start of night of the adjusted day, in hours */
     stdTimeToEnd: number, /**Time the start of night of the adjusted day, in hours */
     Duration: string, 
+    id: number
 }
 

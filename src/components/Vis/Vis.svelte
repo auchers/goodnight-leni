@@ -10,7 +10,10 @@
 
 	let padding = { top: 50, bottom: 150, left: 40, right: 50 };
 
-	let parsedData = d3.csvParse<SleepLog>(rawData, d3.autoType).filter((d) => d.Type === 'sleep');
+	let parsedData = d3
+		.csvParse<SleepLog>(rawData, d3.autoType)
+		.filter((d) => d.Type === 'sleep')
+		.map((d, i) => ({ ...d, id: i }));
 
 	/** returns [adjustedDate, [sleepLogs]]*/
 	let data = d3.groups(parsedData, (d) => FORMATTERS.date(d.aStart));
@@ -64,8 +67,11 @@
 		if ($visMode === MODES.RADIAL) {
 			const theta = xScale(date);
 			const [x, y] = [outerRadius * Math.cos(theta), outerRadius * Math.sin(theta)];
-			console.log(`translate(${x}px, ${y}px)  rotate(${theta}rad)`);
-			return `translate(${x}px, ${y}px)  rotate(${theta + Math.PI * 0.5}rad )`;
+			return `
+			translate(${width / 2}px,${height / 2}px ) 
+			translate(${x}px, ${y}px)  
+			rotate(${theta + Math.PI * 0.5}rad )
+			`;
 		} else return `translate(${xScale(date)}px, 0)`;
 	};
 </script>
@@ -92,14 +98,22 @@
 						>
 					</g>
 				{/each}
+			{:else}
+				{#each yScale.ticks().reverse() as tick}
+					<g
+						class="tick radial"
+						transition:fade
+						transform={`translate(${width / 2}, ${height / 2})`}
+					>
+						<circle r={radialBarHeight - yScale(tick) + innerRadius} />
+						<text text-anchor="middle" dy="-.5em" y={radialBarHeight - yScale(tick) + innerRadius}
+							>{tick} hr</text
+						>
+					</g>
+				{/each}
 			{/if}
 		</g>
-		<g
-			class="bars"
-			style="transform: {$visMode === MODES.RADIAL
-				? `translate(${width / 2}px,${height / 2}px )`
-				: `translate(0,0 )`};"
-		>
+		<g class="bars">
 			{#each data as [date, logs], i (date)}
 				<g
 					style="
@@ -109,17 +123,15 @@
 				>
 					{#each logs as log, index (index)}
 						<rect
-							height={yScale(log[yStartMetric]) - yScale(log[yEndMetric])}
-							width={$visMode === MODES.RADIAL
-								? xScale.bandwidth() * innerRadius
-								: xScale.bandwidth()}
 							fill={colorScale(log.timeToEnd - log.timeToStart)}
 							rx="3"
 							style="q
 							filter:url(#glow);
+							transition-delay: {i * 5}ms;
 							transform: translate(0, {yScale(log[yEndMetric])}px);
+							width: {$visMode === MODES.RADIAL ? xScale.bandwidth() * innerRadius : xScale.bandwidth()}px;
+							height: {yScale(log[yStartMetric]) - yScale(log[yEndMetric])}px
 							"
-							in:fade={{ delay: i * 50, duration: 1000 }}
 						/>
 					{/each}
 				</g>
@@ -140,27 +152,37 @@
 		height: 100%;
 		min-height: 500px;
 		padding: 1em;
+		overflow: visible;
 	}
 
 	.bars {
-		transition: transform 500ms;
+		pointer-events: none;
 		rect,
 		g {
-			transition: transform 500ms, width 500ms;
+			transition: transform 500ms, width 1000ms, height 600ms;
 		}
 	}
 
 	.y-axis {
 		.tick {
-			fill: var(--text-color-grey);
-
-			line {
+			line,
+			circle {
 				stroke: var(--text-color-grey);
 				stroke-dasharray: 3 5;
-				stroke-width: 0.5px;
+				stroke-width: 0.25px;
+				fill: transparent;
+				cursor: pointer;
 			}
 			text {
+				fill: var(--text-color-grey);
 				font-size: 0.8em;
+				pointer-events: none;
+			}
+
+			&.radial:not(:hover) {
+				text {
+					opacity: 0;
+				}
 			}
 		}
 	}

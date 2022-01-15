@@ -26,8 +26,6 @@
 	let width = 500;
 	let height = 200;
 
-	// $: barHeight =
-
 	// X SCALE
 	$: xRange =
 		$visMode === MODES.RADIAL
@@ -39,12 +37,16 @@
 		.domain(data.map(([d]) => d))
 		.range(xRange)
 		.padding(0.2);
-	$: innerRadius = 70;
-	$: outerRadius = height - padding.bottom - padding.top + innerRadius;
+	$: innerRadius = 35;
+	$: radialBarHeight = Math.min(height, width) / 2;
+	$: outerRadius = radialBarHeight + innerRadius;
 
 	// Y SCALE
 	$: yStartMetric = $visMode === MODES.BAR_ABSOLUTE ? KEYS.TIME_TO_START : KEYS.STD_TIME_TO_START;
 	$: yEndMetric = $visMode === MODES.BAR_ABSOLUTE ? KEYS.TIME_TO_END : KEYS.STD_TIME_TO_END;
+
+	$: yRange =
+		$visMode === MODES.RADIAL ? [radialBarHeight, 0] : [height - padding.bottom, padding.top];
 
 	$: yScale = d3
 		.scaleLinear()
@@ -53,7 +55,7 @@
 				data.map(([, arr]) => arr.map((d) => [d[yStartMetric], d[yEndMetric]]).flat()).flat()
 			)
 		)
-		.range([height - padding.bottom, padding.top])
+		.range(yRange)
 		.nice();
 
 	// Y SCALE
@@ -85,7 +87,9 @@
 			{#each yScale.ticks() as tick, index (index)}
 				<g class="tick tick--{tick}" transform="translate(0,{yScale(tick)})">
 					<line x2={width - padding.right} />
-					<text dy="-.5em">{FORMATTERS.yTickFormat(tick)}</text>
+					<text dy="-.5em"
+						>{$visMode === MODES.BAR_ABSOLUTE ? FORMATTERS.yTickFormat(tick) : `${tick} hr`}</text
+					>
 				</g>
 			{/each}
 		</g>
@@ -132,6 +136,7 @@
 	.vis svg {
 		width: 100%;
 		height: 100%;
+		min-height: 500px;
 		padding: 1em;
 	}
 

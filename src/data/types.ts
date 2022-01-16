@@ -19,7 +19,7 @@ export interface SleepLog {
 }
 
 export interface AnnotationType {
-    date: Date,
+    date: string,
     title: string,
     description: string,
     type: string

@@ -12,21 +12,20 @@
 	let r = 7;
 	let paddingBottom = 40;
 
-	const dateString = FORMATTERS.date(annotation.date);
 	$: lineLength = $visMode === MODES.RADIAL ? outerRadius + 50 : yScale.range()[0];
-	$: transform = translateGroup(dateString, lineLength);
+	$: transform = translateGroup(annotation.date, lineLength);
 </script>
 
 {#if $visMode === MODES.RADIAL}
-	<g class="annotation" style="transform: {transform};" transition:fade={{ delay: 1000 }}>
+	<g
+		class="annotation"
+		style="transform: {transform};"
+		in:fade={{ delay: 1000 }}
+		out:fade={{ delay: 0 }}
+	>
 		<line y1={0} y2={outerRadius} />
 		<circle {r} />
 	</g>
-	<!-- {:else}
-	<g class="annotation" style="transform: {transform};" transition:fade>
-		<line y1={0} y2={lineLength + paddingBottom} />
-		<circle {r} transform="translate(0,{lineLength + paddingBottom})" />
-	</g> -->
 {/if}
 
 <style lang="scss">

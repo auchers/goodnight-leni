@@ -19,11 +19,6 @@
 		.csvParse<SleepLog>(rawData, d3.autoType)
 		.filter((d) => d.Type === 'sleep')
 		.map((d, i) => ({ ...d, id: i }));
-	let annotations = rawAnnotations.map(
-		(a): AnnotationType => ({ ...a, date: FORMATTERS.dateParse(a.date) })
-	);
-
-	console.log(`annotations`, annotations);
 
 	/** returns [adjustedDate, [sleepLogs]]*/
 	let data = d3.groups(parsedData, (d) => FORMATTERS.date(d.aStart));
@@ -43,7 +38,7 @@
 
 	$: xScale = d3
 		.scaleBand()
-		.domain(data.map(([d]) => d))
+		.domain(['2021-08-20', ...data.map(([d]) => d)]) // add in birthday manually
 		.range(xRange)
 		.padding(0.2);
 
@@ -74,12 +69,15 @@
 			const theta = xScale(date);
 			const [x, y] = [radius * Math.cos(theta), radius * Math.sin(theta)];
 			return `
-			translate(${width / 2}px,${height / 2}px ) 
-			translate(${x}px, ${y}px)  
-			rotate(${theta + Math.PI * 0.5}rad )
-			`;
+					translate(${width / 2}px,${height / 2}px ) 
+					translate(${x}px, ${y}px)  
+					rotate(${theta + Math.PI * 0.5}rad )
+					`;
 		} else return `translate(${xScale(date)}px, 0)`;
 	};
+
+	// only include annotations that exist in domain
+	$: annotations = rawAnnotations.filter((a) => xScale.domain().includes(a.date));
 </script>
 
 <div class="vis" bind:clientWidth={width} bind:clientHeight={height}>

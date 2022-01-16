@@ -1,15 +1,20 @@
 <script lang="ts">
 	import * as d3 from 'd3';
-	import { fade } from 'svelte/transition';
 
-	import type { SleepLog } from '$src/data/types';
+	import type { AnnotationType, SleepLog } from '$src/data/types';
 	import { visMode } from '$src/store';
 
 	import rawData from '$src/data/sleepLogs.csv?raw';
+	import rawAnnotations from '$src/data/annotations.json';
 	import { COLOR_PALATTE, FORMATTERS, KEYS, MODES } from '$src/utils/constants';
+	import YAxis from './YAxis.svelte';
+	import Annotation from './Annotation.svelte';
 
+	let width;
+	let height;
 	let padding = { top: 50, bottom: 150, left: 40, right: 50 };
 
+	// DATA + TRANSFORMATIONS
 	let parsedData = d3
 		.csvParse<SleepLog>(rawData, d3.autoType)
 		.filter((d) => d.Type === 'sleep')
@@ -25,11 +30,6 @@
 		});
 	});
 
-	console.log(`data`, data);
-
-	let width = 500;
-	let height = 200;
-
 	// X SCALE
 	$: xRange =
 		$visMode === MODES.RADIAL
@@ -38,11 +38,12 @@
 
 	$: xScale = d3
 		.scaleBand()
-		.domain(data.map(([d]) => d))
+		.domain(['2021-08-20', ...data.map(([d]) => d)]) // add in birthday manually
 		.range(xRange)
 		.padding(0.2);
+
 	$: innerRadius = 35;
-	$: radialBarHeight = Math.min(height, width) / 2;
+	$: radialBarHeight = (Math.min(height, width) - padding.bottom) / 2;
 	$: outerRadius = radialBarHeight + innerRadius;
 
 	// Y SCALE
@@ -60,20 +61,23 @@
 		.range(yRange)
 		.nice();
 
-	// Y SCALE
+	// COLOR SCALE
 	$: colorScale = d3.scaleQuantize(COLOR_PALATTE).domain([0, 12]).nice(); // sleep duration
 
-	$: translateGroup = (date: string) => {
+	$: translateGroup = (date: string, radius = outerRadius) => {
 		if ($visMode === MODES.RADIAL) {
 			const theta = xScale(date);
-			const [x, y] = [outerRadius * Math.cos(theta), outerRadius * Math.sin(theta)];
+			const [x, y] = [radius * Math.cos(theta), radius * Math.sin(theta)];
 			return `
-			translate(${width / 2}px,${height / 2}px ) 
-			translate(${x}px, ${y}px)  
-			rotate(${theta + Math.PI * 0.5}rad )
-			`;
+					translate(${width / 2}px,${height / 2}px ) 
+					translate(${x}px, ${y}px)  
+					rotate(${theta + Math.PI * 0.5}rad )
+					`;
 		} else return `translate(${xScale(date)}px, 0)`;
 	};
+
+	// only include annotations that exist in domain
+	$: annotations = rawAnnotations.filter((a) => xScale.domain().includes(a.date));
 </script>
 
 <div class="vis" bind:clientWidth={width} bind:clientHeight={height}>
@@ -88,30 +92,11 @@
 			</filter>
 		</defs>
 		<g class="x-axis" />
-		<g class="y-axis">
-			{#if $visMode !== MODES.RADIAL}
-				{#each yScale.ticks() as tick, index}
-					<g class="tick tick--{tick}" transform="translate(0,{yScale(tick)})" transition:fade>
-						<line x2={width - padding.right} />
-						<text dy="-.5em"
-							>{$visMode === MODES.BAR_ABSOLUTE ? FORMATTERS.yTickFormat(tick) : `${tick} hr`}</text
-						>
-					</g>
-				{/each}
-			{:else}
-				{#each yScale.ticks().reverse() as tick}
-					<g
-						class="tick radial"
-						transition:fade
-						transform={`translate(${width / 2}, ${height / 2})`}
-					>
-						<circle r={radialBarHeight - yScale(tick) + innerRadius} />
-						<text text-anchor="middle" dy="-.5em" y={radialBarHeight - yScale(tick) + innerRadius}
-							>{tick} hr</text
-						>
-					</g>
-				{/each}
-			{/if}
+		<YAxis {yScale} {width} {height} {padding} {radialBarHeight} {innerRadius} />
+		<g class="annotations" style="transform:translate({width / 2}px, {height / 2}px)">
+			{#each annotations as annotation}
+				<Annotation {annotation} {outerRadius} {yScale} {xScale} />
+			{/each}
 		</g>
 		<g class="bars">
 			{#each data as [date, logs], i (date)}
@@ -159,31 +144,8 @@
 		pointer-events: none;
 		rect,
 		g {
-			transition: transform 500ms, width 1000ms, height 600ms;
-		}
-	}
-
-	.y-axis {
-		.tick {
-			line,
-			circle {
-				stroke: var(--text-color-grey);
-				stroke-dasharray: 3 5;
-				stroke-width: 0.25px;
-				fill: transparent;
-				cursor: pointer;
-			}
-			text {
-				fill: var(--text-color-grey);
-				font-size: 0.8em;
-				pointer-events: none;
-			}
-
-			&.radial:not(:hover) {
-				text {
-					opacity: 0;
-				}
-			}
+			transition: transform var(--fast-transition-duration), width var(--slow-transition-duration),
+				height var(--slow-transition-duration);
 		}
 	}
 </style>

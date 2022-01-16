@@ -1,0 +1,92 @@
+[
+    {
+        "date": "2021-08-20",
+        "type": "event",
+        "title": "Leni is born",
+        "description": ""
+    },
+    {
+        "date": "2021-10-01",
+        "type": "event",
+        "title": "Begin Sleep Course",
+        "description": ""
+    },
+    {
+        "date": "2022-02-26",
+        "type": "event",
+        "title": "Return to Work",
+        "description": ""
+    },
+    {
+        "date": "2021-08-20",
+        "type": "growth",
+        "title": "Leni Born",
+        "description": "",
+        "weight": 7.13,
+        "length": 19
+    },
+    {
+        "date": "2021-08-23",
+        "type": "growth",
+        "title": "Weight: 7lbs 6oz",
+        "description": "",
+        "weight": 7.6,
+        "length": 20
+    },
+    {
+        "date": "2021-08-31",
+        "type": "growth",
+        "title": "Weight: 8lbs 14oz",
+        "description": "",
+        "weight": 8.14,
+        "length": null
+    },
+    {
+        "date": "2021-10-04",
+        "type": "growth",
+        "title": "Weight: 12lbs 9oz",
+        "description": "",
+        "weight": 12.9,
+        "length": 22
+    },
+    {
+        "date": "2021-12-06",
+        "type": "growth",
+        "title": "Weight: 15lbs 6oz",
+        "description": "",
+        "weight": 15.6,
+        "length": 25
+    },
+    {
+        "date": "2022-01-03",
+        "type": "growth",
+        "title": "Weight: 16lbs 6oz",
+        "description": "",
+        "weight": 16.4,
+        "length": 26
+    },
+    {
+        "date": "2021-11-19",
+        "type": "travel",
+        "title": "Portland, ME",
+        "description": "to 2021-11-22"
+    },
+    {
+        "date": "2021-12-12",
+        "type": "travel",
+        "title": "Maui, HI",
+        "description": "to 2021-12-19"
+    },
+    {
+        "date": "2022-01-10",
+        "type": "travel",
+        "title": "Boston, MA",
+        "description": ""
+    },
+    {
+        "date": "2022-01-18",
+        "type": "travel",
+        "title": "Israel",
+        "description": ""
+    }
+]

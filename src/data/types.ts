@@ -18,3 +18,10 @@ export interface SleepLog {
     id: number
 }
 
+export interface AnnotationType {
+    date: string,
+    title: string,
+    description: string,
+    type: string
+}
+

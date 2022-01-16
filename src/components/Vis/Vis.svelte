@@ -7,6 +7,7 @@
 
 	import rawData from '$src/data/sleepLogs.csv?raw';
 	import { COLOR_PALATTE, FORMATTERS, KEYS, MODES } from '$src/utils/constants';
+	import YAxis from './YAxis.svelte';
 
 	let padding = { top: 50, bottom: 150, left: 40, right: 50 };
 
@@ -39,8 +40,9 @@
 		.domain(data.map(([d]) => d))
 		.range(xRange)
 		.padding(0.2);
+
 	$: innerRadius = 35;
-	$: radialBarHeight = Math.min(height, width) / 2;
+	$: radialBarHeight = (Math.min(height, width) - padding.bottom) / 2;
 	$: outerRadius = radialBarHeight + innerRadius;
 
 	// Y SCALE
@@ -86,31 +88,7 @@
 			</filter>
 		</defs>
 		<g class="x-axis" />
-		<g class="y-axis">
-			{#if $visMode !== MODES.RADIAL}
-				{#each yScale.ticks() as tick, index}
-					<g class="tick tick--{tick}" transform="translate(0,{yScale(tick)})" transition:fade>
-						<line x2={width - padding.right} />
-						<text dy="-.5em"
-							>{$visMode === MODES.BAR_ABSOLUTE ? FORMATTERS.yTickFormat(tick) : `${tick} hr`}</text
-						>
-					</g>
-				{/each}
-			{:else}
-				{#each yScale.ticks().reverse() as tick}
-					<g
-						class="tick radial"
-						transition:fade
-						transform={`translate(${width / 2}, ${height / 2})`}
-					>
-						<circle r={radialBarHeight - yScale(tick) + innerRadius} />
-						<text text-anchor="middle" dy="-.5em" y={radialBarHeight - yScale(tick) + innerRadius}
-							>{tick} hr</text
-						>
-					</g>
-				{/each}
-			{/if}
-		</g>
+		<YAxis {yScale} {width} {height} {padding} {radialBarHeight} {innerRadius} />
 		<g class="bars">
 			{#each data as [date, logs], i (date)}
 				<g
@@ -158,30 +136,6 @@
 		rect,
 		g {
 			transition: transform 500ms, width 1000ms, height 600ms;
-		}
-	}
-
-	.y-axis {
-		.tick {
-			line,
-			circle {
-				stroke: var(--text-color-grey);
-				stroke-dasharray: 3 5;
-				stroke-width: 0.25px;
-				fill: transparent;
-				cursor: pointer;
-			}
-			text {
-				fill: var(--text-color-grey);
-				font-size: 0.8em;
-				pointer-events: none;
-			}
-
-			&.radial:not(:hover) {
-				text {
-					opacity: 0;
-				}
-			}
 		}
 	}
 </style>

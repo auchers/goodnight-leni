@@ -93,9 +93,9 @@
 		</defs>
 		<g class="x-axis" />
 		<YAxis {yScale} {width} {height} {padding} {radialBarHeight} {innerRadius} />
-		<g class="annotations">
+		<g class="annotations" style="transform:translate({width / 2}px, {height / 2}px)">
 			{#each annotations as annotation}
-				<Annotation {translateGroup} {annotation} {outerRadius} {yScale} />
+				<Annotation {annotation} {outerRadius} {yScale} {xScale} />
 			{/each}
 		</g>
 		<g class="bars">

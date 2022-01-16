@@ -48,6 +48,9 @@
 				fill: var(--text-color-grey);
 				font-size: 0.8em;
 				pointer-events: none;
+				paint-order: stroke;
+				stroke: #535353;
+				stroke-width: 1px;
 			}
 
 			&.radial:not(:hover) {

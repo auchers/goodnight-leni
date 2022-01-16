@@ -1,20 +1,29 @@
 <script lang="ts">
 	import * as d3 from 'd3';
-	import { fade } from 'svelte/transition';
 
-	import type { SleepLog } from '$src/data/types';
+	import type { AnnotationType, SleepLog } from '$src/data/types';
 	import { visMode } from '$src/store';
 
 	import rawData from '$src/data/sleepLogs.csv?raw';
+	import rawAnnotations from '$src/data/annotations.json';
 	import { COLOR_PALATTE, FORMATTERS, KEYS, MODES } from '$src/utils/constants';
 	import YAxis from './YAxis.svelte';
+	import Annotation from './Annotation.svelte';
 
+	let width;
+	let height;
 	let padding = { top: 50, bottom: 150, left: 40, right: 50 };
 
+	// DATA + TRANSFORMATIONS
 	let parsedData = d3
 		.csvParse<SleepLog>(rawData, d3.autoType)
 		.filter((d) => d.Type === 'sleep')
 		.map((d, i) => ({ ...d, id: i }));
+	let annotations = rawAnnotations.map(
+		(a): AnnotationType => ({ ...a, date: FORMATTERS.dateParse(a.date) })
+	);
+
+	console.log(`annotations`, annotations);
 
 	/** returns [adjustedDate, [sleepLogs]]*/
 	let data = d3.groups(parsedData, (d) => FORMATTERS.date(d.aStart));
@@ -25,9 +34,6 @@
 			log.stdTimeToEnd = log.timeToEnd - minStart;
 		});
 	});
-
-	let width;
-	let height;
 
 	// X SCALE
 	$: xRange =
@@ -60,13 +66,13 @@
 		.range(yRange)
 		.nice();
 
-	// Y SCALE
+	// COLOR SCALE
 	$: colorScale = d3.scaleQuantize(COLOR_PALATTE).domain([0, 12]).nice(); // sleep duration
 
-	$: translateGroup = (date: string) => {
+	$: translateGroup = (date: string, radius = outerRadius) => {
 		if ($visMode === MODES.RADIAL) {
 			const theta = xScale(date);
-			const [x, y] = [outerRadius * Math.cos(theta), outerRadius * Math.sin(theta)];
+			const [x, y] = [radius * Math.cos(theta), radius * Math.sin(theta)];
 			return `
 			translate(${width / 2}px,${height / 2}px ) 
 			translate(${x}px, ${y}px)  
@@ -89,6 +95,11 @@
 		</defs>
 		<g class="x-axis" />
 		<YAxis {yScale} {width} {height} {padding} {radialBarHeight} {innerRadius} />
+		<g class="annotations">
+			{#each annotations as annotation}
+				<Annotation {translateGroup} {annotation} {outerRadius} {yScale} />
+			{/each}
+		</g>
 		<g class="bars">
 			{#each data as [date, logs], i (date)}
 				<g
@@ -135,7 +146,8 @@
 		pointer-events: none;
 		rect,
 		g {
-			transition: transform 500ms, width 1000ms, height 600ms;
+			transition: transform var(--fast-transition-duration), width var(--slow-transition-duration),
+				height var(--slow-transition-duration);
 		}
 	}
 </style>

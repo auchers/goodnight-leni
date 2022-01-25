@@ -19,7 +19,9 @@
 	class="tooltip"
 	class:visible={x && y}
 	class:needsFlip
-	style="transform:translate({x}px,{y}px) {needsFlip ? `translateX(calc(-100% - 2em))` : ''};"
+	style="transform:translate({x}px,{y}px) translateY(-50%) {needsFlip
+		? `translateX(calc(-100% - 2em))`
+		: ''};"
 >
 	{#if hoveredLog}
 		<div class="tooltip-title">{FORMATTERS.dateLabel(hoveredLog.aStart)}</div>

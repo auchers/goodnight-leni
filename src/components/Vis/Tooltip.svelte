@@ -2,6 +2,7 @@
 	import type { SleepLog } from '$src/data/types';
 	import { FORMATTERS } from '$src/utils/constants';
 	import type { ScaleLinear, ScaleQuantize } from 'd3';
+	import Color from 'color';
 
 	export let tooltipPos: [number, number] | [null, null];
 	export let hoveredLog: SleepLog | null;
@@ -28,6 +29,7 @@
 		<div class="tooltip-chart">
 			<div
 				class="tooltip-bar"
+				class:isLight={Color(colorScale(dur)).isLight()}
 				style="width: {scale(hoveredLog.timeToEnd) - scale(hoveredLog.timeToStart)}px;
 				background-color:{colorScale(dur)}"
 			/>
@@ -49,6 +51,7 @@
 		padding: 0.5em;
 		border-radius: 5px;
 		box-shadow: var(--shadow-elevation-medium);
+		font-family: 'Roboto Condensed', sans-serif;
 
 		&:not(.visible) {
 			opacity: 0;
@@ -69,6 +72,11 @@
 			transform: translate(0, -50%);
 			border-color: transparent transparent transparent #fff;
 		}
+		.tooltip-title {
+			font-weight: 700;
+			font-variant: all-small-caps;
+			font-size: 1.25em;
+		}
 
 		.tooltip-chart {
 			display: flex;
@@ -82,6 +90,10 @@
 				margin-right: 0.5em;
 				position: relative;
 
+				&.isLight {
+					border: 1px solid var(--text-color-grey);
+				}
+
 				&::before,
 				&::after {
 					content: '';
@@ -89,6 +101,7 @@
 					width: 1px;
 					border-left: 1px black solid;
 					position: absolute;
+					left: -1px; // adjust for border stroke
 					transform: translateY(-25%);
 				}
 

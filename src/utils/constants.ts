@@ -11,7 +11,9 @@ export const FORMATTERS = ({
     dateParse: d3.utcParse("%Y-%m-%d"),
     yTickFormat: (d):string => (d < 24 
         ? `${d - 12}pm` 
-        : `${d - 24}am`)
+        : `${d - 24}am`),
+    dateLabel: d3.utcFormat("%b %d, %Y"),
+    hour: d3.format(".1f")
   })
 
 export const KEYS = ({

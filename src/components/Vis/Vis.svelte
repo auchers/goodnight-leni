@@ -15,7 +15,7 @@
 	let height;
 	let padding = { top: 50, bottom: 150, left: 40, right: 50 };
 	let tooltipPos: [number, number] | [null, null] = [null, null];
-	let tooltipContent;
+	let hoveredLog: SleepLog | null;
 
 	// DATA + TRANSFORMATIONS
 	let parsedData = d3
@@ -81,10 +81,11 @@
 
 	const handleMouseover = (e: MouseEvent, log: SleepLog) => {
 		tooltipPos = [e.offsetX, e.offsetY];
-		tooltipContent = `${FORMATTERS.date(log.Start)}`;
+		hoveredLog = log;
 	};
 	const handleMouseout = (e: MouseEvent, log: SleepLog) => {
 		tooltipPos = [null, null];
+		hoveredLog = null;
 	};
 
 	// only include annotations that exist in domain
@@ -136,9 +137,13 @@
 			{/each}
 		</g>
 	</svg>
-	<Tooltip {tooltipPos}>
-		<div>{tooltipContent}</div>
-	</Tooltip>
+	<Tooltip
+		needsFlip={tooltipPos[0] > width * 0.75}
+		{tooltipPos}
+		lengthScale={yScale}
+		{hoveredLog}
+		{colorScale}
+	/>
 </div>
 
 <style lang="scss">

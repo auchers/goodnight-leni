@@ -3,6 +3,10 @@
 	import Vis from '$components/Vis/Vis.svelte';
 	import { visMode } from '$src/store';
 	import { MODES } from '$src/utils/constants';
+	import Absolute from '$src/assets/Absolute.svg';
+	import Relative from '$src/assets/Relative.svg';
+	import Radial from '$src/assets/Radial.svg';
+
 	import '../app.scss';
 
 	function setMode(mode: MODES) {
@@ -13,9 +17,22 @@
 <div class="main-grid">
 	<header>Goodnight Leni</header>
 	<div class="buttons">
-		<button on:click={() => setMode(MODES.BAR_ABSOLUTE)}>bar (absolute)</button>
-		<button on:click={() => setMode(MODES.BAR_RELATIVE)}>bar (relative)</button>
-		<button on:click={() => setMode(MODES.RADIAL)}>radial (relative)</button>
+		<button
+			title="switch to absolute bar chart"
+			on:click={() => setMode(MODES.BAR_ABSOLUTE)}
+			class:active={MODES.BAR_ABSOLUTE === $visMode}><Absolute /></button
+		>
+		<button
+			title="switch to relative bar chart"
+			on:click={() => setMode(MODES.BAR_RELATIVE)}
+			class:active={MODES.BAR_RELATIVE === $visMode}><Relative /></button
+		>
+
+		<button
+			title="switch to radial chart"
+			on:click={() => setMode(MODES.RADIAL)}
+			class:active={MODES.RADIAL === $visMode}><Radial /></button
+		>
 	</div>
 	<Vis />
 </div>
@@ -38,9 +55,19 @@
 
 	.buttons {
 		padding: 0.5em;
+
+		:not(.active) {
+			opacity: 0.5;
+		}
+
+		button {
+			padding: 0.5em;
+			width: 2em;
+		}
 	}
 
 	button {
-		padding: 0.5em;
+		all: unset;
+		cursor: pointer;
 	}
 </style>

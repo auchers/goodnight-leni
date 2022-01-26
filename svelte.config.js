@@ -3,6 +3,7 @@ import adapter from '@sveltejs/adapter-static';
 // import adapter from '@sveltejs/adapter-netlify';
 import preprocess from 'svelte-preprocess';
 import path from 'path';
+import svg from '@poppanator/sveltekit-svg';
 
 const dev = process.env.NODE_ENV === 'development';
 
@@ -23,7 +24,8 @@ const config = {
 					$utils: path.resolve('./src/utils'),
 					$components: path.resolve('./src/components')
 				}
-			}
+			},
+			plugins: [svg()]
 		}
 	}
 };

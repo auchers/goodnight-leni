@@ -5,6 +5,24 @@
 	--text-color-grey: #bdbdbd;
 	--fast-transition-duration: 500ms;
 	--slow-transition-duration: 1000ms;
+
+	// from https://www.joshwcomeau.com/shadow-palette/
+	--shadow-color: 0deg 0% 0%;
+	--shadow-elevation-low: 0.1px 0.8px 0.9px hsl(var(--shadow-color) / 0.31),
+		0.2px 1.2px 1.3px -1.5px hsl(var(--shadow-color) / 0.28),
+		0.4px 2.7px 2.9px -2.9px hsl(var(--shadow-color) / 0.25);
+	--shadow-elevation-medium: 0.1px 0.8px 0.9px hsl(var(--shadow-color) / 0.32),
+		0.3px 2.1px 2.2px -1px hsl(var(--shadow-color) / 0.3),
+		0.8px 5.4px 5.8px -2px hsl(var(--shadow-color) / 0.28),
+		2px 13.5px 14.4px -2.9px hsl(var(--shadow-color) / 0.25);
+	--shadow-elevation-high: 0.1px 0.8px 0.9px hsl(var(--shadow-color) / 0.3),
+		0.5px 3.1px 3.3px -0.4px hsl(var(--shadow-color) / 0.29),
+		0.8px 5.8px 6.2px -0.8px hsl(var(--shadow-color) / 0.28),
+		1.4px 9.7px 10.4px -1.3px hsl(var(--shadow-color) / 0.27),
+		2.3px 16px 17.1px -1.7px hsl(var(--shadow-color) / 0.26),
+		3.7px 25.6px 27.4px -2.1px hsl(var(--shadow-color) / 0.24),
+		5.7px 39.6px 42.3px -2.5px hsl(var(--shadow-color) / 0.23),
+		8.5px 58.9px 62.9px -2.9px hsl(var(--shadow-color) / 0.22);
 }
 
 @font-face {
@@ -18,6 +36,9 @@
 	font-weight: normal;
 	font-style: normal;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;700&display=swap');
+// font-family: 'Roboto Condensed', sans-serif;
 
 * {
 	padding: 0;

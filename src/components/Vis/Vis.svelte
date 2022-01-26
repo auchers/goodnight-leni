@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as d3 from 'd3';
 
-	import type { AnnotationType, SleepLog } from '$src/data/types';
+	import type { SleepLog } from '$src/data/types';
 	import { visMode } from '$src/store';
 
 	import rawData from '$src/data/sleepLogs.csv?raw';
@@ -9,10 +9,13 @@
 	import { COLOR_PALATTE, FORMATTERS, KEYS, MODES } from '$src/utils/constants';
 	import YAxis from './YAxis.svelte';
 	import Annotation from './Annotation.svelte';
+	import Tooltip from './Tooltip.svelte';
 
 	let width;
 	let height;
 	let padding = { top: 50, bottom: 150, left: 40, right: 50 };
+	let tooltipPos: [number, number] | [null, null] = [null, null];
+	let hoveredLog: SleepLog | null;
 
 	// DATA + TRANSFORMATIONS
 	let parsedData = d3
@@ -76,6 +79,15 @@
 		} else return `translate(${xScale(date)}px, 0)`;
 	};
 
+	const handleMouseover = (e: MouseEvent, log: SleepLog) => {
+		tooltipPos = [e.offsetX, e.offsetY];
+		hoveredLog = log;
+	};
+	const handleMouseout = (e: MouseEvent, log: SleepLog) => {
+		tooltipPos = [null, null];
+		hoveredLog = null;
+	};
+
 	// only include annotations that exist in domain
 	$: annotations = rawAnnotations.filter((a) => xScale.domain().includes(a.date));
 </script>
@@ -110,6 +122,8 @@
 						<rect
 							fill={colorScale(log.timeToEnd - log.timeToStart)}
 							rx="3"
+							on:mouseenter={(e) => handleMouseover(e, log)}
+							on:mouseleave={(e) => handleMouseout(e, log)}
 							style="q
 							filter:url(#glow);
 							transition-delay: {i * 5}ms;
@@ -123,6 +137,13 @@
 			{/each}
 		</g>
 	</svg>
+	<Tooltip
+		needsFlip={tooltipPos[0] > width * 0.75}
+		{tooltipPos}
+		lengthScale={yScale}
+		{hoveredLog}
+		{colorScale}
+	/>
 </div>
 
 <style lang="scss">
@@ -141,11 +162,15 @@
 	}
 
 	.bars {
-		pointer-events: none;
+		cursor: pointer;
 		rect,
 		g {
 			transition: transform var(--fast-transition-duration), width var(--slow-transition-duration),
 				height var(--slow-transition-duration);
+		}
+
+		rect:hover {
+			stroke: blanchedalmond;
 		}
 	}
 </style>

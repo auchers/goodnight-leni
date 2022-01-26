@@ -34,6 +34,10 @@
 				background-color:{colorScale(dur)}"
 			/>
 			<div class="tooltip-duration">{FORMATTERS.hour(dur)} hours</div>
+			<div class="row">
+				<div class="tooltip-time start">{FORMATTERS.time(hoveredLog.Start)}</div>
+				<div class="tooltip-time end">{FORMATTERS.time(hoveredLog.End)}</div>
+			</div>
 		</div>
 	{/if}
 </div>
@@ -79,10 +83,24 @@
 		}
 
 		.tooltip-chart {
-			display: flex;
+			display: grid;
+			grid-template-columns: max-content 1fr;
 			align-items: center;
 			justify-content: space-between;
 			position: relative;
+
+			.row {
+				display: flex;
+				justify-content: space-between;
+
+				.tooltip-time {
+					font-size: 0.75em;
+
+					&.end {
+						margin-left: 0.5em;
+					}
+				}
+			}
 
 			.tooltip-bar {
 				height: 0.5em;

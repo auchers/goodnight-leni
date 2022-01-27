@@ -15,7 +15,10 @@
 </script>
 
 <div class="main-grid">
-	<header>Goodnight Leni</header>
+	<header>
+		<h1>Goodnight Leni</h1>
+		<p>Tracking the first 6 months of newborn sleep</p>
+	</header>
 	<div class="buttons">
 		<button
 			title="switch to absolute bar chart"
@@ -48,9 +51,14 @@
 
 	header {
 		height: min-content;
-		font-size: 4em;
-		-webkit-text-stroke-width: 3px;
-		-webkit-text-stroke-color: black;
+		padding-bottom: 0.5em;
+		padding-left: 0.5em;
+
+		h1 {
+			font-size: 4em;
+		}
+		// -webkit-text-stroke-width: 3px;
+		// -webkit-text-stroke-color: black;
 	}
 
 	.buttons {

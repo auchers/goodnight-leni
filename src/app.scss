@@ -25,17 +25,17 @@
 		8.5px 58.9px 62.9px -2.9px hsl(var(--shadow-color) / 0.22);
 }
 
-@font-face {
-	font-family: 'action_manbold_italic';
-	src: url('assets/Action_Man_Bold_Italic-webfont.eot');
-	src: url('assets/Action_Man_Bold_Italic-webfont.eot?#iefix') format('embedded-opentype'),
-		url('assets/Action_Man_Bold_Italic-webfont.woff2') format('woff2'),
-		url('assets/Action_Man_Bold_Italic-webfont.woff') format('woff'),
-		url('assets/Action_Man_Bold_Italic-webfont.ttf') format('truetype'),
-		url('assets/Action_Man_Bold_Italic-webfont.svg#action_manbold_italic') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
+// @font-face {
+// 	font-family: 'action_manbold_italic';
+// 	src: url('assets/Action_Man_Bold_Italic-webfont.eot');
+// 	src: url('assets/Action_Man_Bold_Italic-webfont.eot?#iefix') format('embedded-opentype'),
+// 		url('assets/Action_Man_Bold_Italic-webfont.woff2') format('woff2'),
+// 		url('assets/Action_Man_Bold_Italic-webfont.woff') format('woff'),
+// 		url('assets/Action_Man_Bold_Italic-webfont.ttf') format('truetype'),
+// 		url('assets/Action_Man_Bold_Italic-webfont.svg#action_manbold_italic') format('svg');
+// 	font-weight: normal;
+// 	font-style: normal;
+// }
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;700&display=swap');
 // font-family: 'Roboto Condensed', sans-serif;
@@ -54,7 +54,7 @@ body {
 }
 
 header {
-	font-family: 'action_manbold_italic';
+	font-family: 'Roboto Condensed', sans-serif;
 }
 
 .no-transition * {

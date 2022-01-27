@@ -15,6 +15,9 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
+		paths: {
+			base: dev ? '' : '/newborn-sleep'
+		},
 		// hydrate the <div id="svelte"> element in src/app.html
 		target: '#svelte',
 		vite: {

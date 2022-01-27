@@ -13,7 +13,7 @@
 
 	let width;
 	let height;
-	let padding = { top: 50, bottom: 150, left: 40, right: 50 };
+	let padding = { top: 70, bottom: 150, left: 40, right: 50 };
 	let tooltipPos: [number, number] | [null, null] = [null, null];
 	let hoveredLog: SleepLog | null;
 
@@ -105,9 +105,15 @@
 		</defs>
 		<g class="x-axis" />
 		<YAxis {yScale} {width} {height} {padding} {radialBarHeight} {innerRadius} />
-		<g class="annotations" style="transform:translate({width / 2}px, {height / 2}px)">
+		<g class="annotations">
 			{#each annotations as annotation}
-				<Annotation {annotation} {outerRadius} {yScale} {xScale} />
+				<Annotation
+					{annotation}
+					{outerRadius}
+					{yScale}
+					{xScale}
+					groupTransform={$visMode === MODES.RADIAL && `translate(${width / 2}px, ${height / 2}px)`}
+				/>
 			{/each}
 		</g>
 		<g class="bars">

@@ -25,7 +25,20 @@ const config = {
 					$components: path.resolve('./src/components')
 				}
 			},
-			plugins: [svg()]
+			plugins: [
+				svg({
+					svgoOptions: {
+						plugins: [
+							{
+								name: 'preset-default',
+								params: {
+									overrides: { removeViewBox: false }
+								}
+							}
+						]
+					}
+				})
+			]
 		}
 	}
 };

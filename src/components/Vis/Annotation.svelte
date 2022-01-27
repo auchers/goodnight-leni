@@ -1,13 +1,17 @@
 <script lang="ts">
 	import type { AnnotationType } from '$src/data/types';
 	import { visMode } from '$src/store';
-	import { FORMATTERS, MODES } from '$src/utils/constants';
+	import { MODES } from '$src/utils/constants';
 	import { fade } from 'svelte/transition';
+	import Event from '$src/assets/Event.svg';
+	import Growth from '$src/assets/Growth.svg';
+	import Flight from '$src/assets/Flight.svg';
 
 	export let outerRadius;
 	export let yScale;
 	export let xScale;
 	export let annotation: AnnotationType;
+	export let groupTransform;
 
 	let r = 7;
 	let dx = 0.5; //em
@@ -15,14 +19,21 @@
 
 	$: lineLength = $visMode === MODES.RADIAL ? outerRadius + 50 : yScale.range()[0];
 	$: theta = xScale(date);
-	$: [x, y] = [lineLength * Math.cos(theta), lineLength * Math.sin(theta)];
-	$: rotation = theta + Math.PI * 0.5;
+
+	$: [x, y] =
+		$visMode === MODES.RADIAL
+			? [lineLength * Math.cos(theta), lineLength * Math.sin(theta)]
+			: [theta, yScale.range()[1] / 2];
+	$: rotation = $visMode === MODES.RADIAL ? theta + Math.PI * 0.5 : 0;
 
 	$: transform = `translate(${x}px, ${y}px)rotate(${rotation}rad)`;
+	$: textAnchor = $visMode === MODES.RADIAL ? (x >= 0 ? 'start' : 'end') : 'start';
+	$: calcDx = $visMode === MODES.RADIAL && (x > outerRadius / 2 ? `${dx}em` : `${-dx}em`);
+	$: Icon = annotation.type === 'event' ? Event : annotation.type === 'growth' ? Growth : Flight;
 </script>
 
-{#if $visMode === MODES.RADIAL}
-	<g class="annotation">
+{#key $visMode}
+	<g class="annotation" style="transform: {groupTransform};">
 		<g
 			class="annotation-line"
 			style="transform: {transform};"
@@ -30,36 +41,47 @@
 			out:fade={{ delay: 0 }}
 		>
 			<line y1={0} y2={outerRadius} />
-			<circle {r} />
+			<g class="icon">
+				<svelte:component
+					this={Icon}
+					width="2em"
+					height="2em"
+					preserveAspectRatio="xMidYMid meet"
+				/>
+			</g>
 		</g>
 
 		<g
 			class="annotation-text"
-			style="transform: translate({x}px, {y}px)"
-			text-anchor={x >= 0 ? 'start' : 'end'}
+			style="transform: translate({x}px, {y - 5}px)"
+			text-anchor={textAnchor}
 		>
-			<text class="annotation-title" dy="-.75em" dx={x > outerRadius / 2 ? `${dx}em` : `${-dx}em`}
-				>{title}</text
-			>
-			<text class="annotation-date" dy="-2.5em" dx={x > outerRadius / 2 ? `${dx}em` : `${-dx}em`}
-				>{date}</text
-			>
+			<text class="annotation-title" dy="-2em" dx={calcDx}>{title}</text>
+			<text class="annotation-date" dy="-4em" dx={calcDx}>{date}</text>
 		</g>
 	</g>
-{/if}
+{/key}
 
 <style lang="scss">
 	.annotation {
 		cursor: pointer;
-		line {
-			stroke: var(--text-color-grey);
-			stroke-dasharray: 3 5;
-			stroke-width: 0.5px;
+
+		.annotation-line {
+			line {
+				stroke: var(--text-color-grey);
+				stroke-dasharray: 3 5;
+				stroke-width: 0.5px;
+			}
 		}
 
-		circle {
-			fill: #777c7f;
-			transition: transform 200ms;
+		.icon {
+			transform: translate(-1em, -2.1em);
+			width: 2em;
+			fill: transparent;
+
+			&:not(:hover) {
+				opacity: 0.5;
+			}
 		}
 
 		text {
@@ -73,10 +95,6 @@
 		}
 
 		&:hover {
-			circle {
-				transform: scale(1.5);
-			}
-
 			text {
 				opacity: 1;
 			}

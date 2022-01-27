@@ -1,13 +1,12 @@
 <script lang="ts">
 	import type { SleepLog } from '$src/data/types';
-	import { FORMATTERS } from '$src/utils/constants';
+	import { COLOR_SCALE, FORMATTERS } from '$src/utils/constants';
 	import type { ScaleLinear, ScaleQuantize } from 'd3';
 	import Color from 'color';
 
 	export let tooltipPos: [number, number] | [null, null];
 	export let hoveredLog: SleepLog | null;
 	export let lengthScale: ScaleLinear<any, any>;
-	export let colorScale: ScaleQuantize<any, any>;
 	export let needsFlip: boolean;
 
 	$: [x, y] = tooltipPos;
@@ -29,9 +28,9 @@
 		<div class="tooltip-chart">
 			<div
 				class="tooltip-bar"
-				class:isLight={Color(colorScale(dur)).isLight()}
+				class:isLight={Color(COLOR_SCALE(dur)).isLight()}
 				style="width: {scale(hoveredLog.timeToEnd) - scale(hoveredLog.timeToStart)}px;
-				background-color:{colorScale(dur)}"
+				background-color:{COLOR_SCALE(dur)}"
 			/>
 			<div class="tooltip-duration">{FORMATTERS.hour(dur)} hours</div>
 			<div class="row">

@@ -2,18 +2,19 @@
 	import * as d3 from 'd3';
 
 	import type { SleepLog } from '$src/data/types';
-	import { visMode } from '$src/store';
+	import { visMode, selectedThreshold } from '$src/store';
 
 	import rawData from '$src/data/sleepLogs.csv?raw';
 	import rawAnnotations from '$src/data/annotations.json';
-	import { COLOR_PALATTE, FORMATTERS, KEYS, MODES } from '$src/utils/constants';
+	import { COLOR_SCALE, FORMATTERS, KEYS, MODES } from '$src/utils/constants';
 	import YAxis from './YAxis.svelte';
 	import Annotation from './Annotation.svelte';
 	import Tooltip from './Tooltip.svelte';
+	import ColorLegend from './ColorLegend.svelte';
 
 	let width;
 	let height;
-	let padding = { top: 70, bottom: 150, left: 40, right: 50 };
+	let padding = { top: 70, bottom: 90, left: 40, right: 50 };
 	let tooltipPos: [number, number] | [null, null] = [null, null];
 	let hoveredLog: SleepLog | null;
 
@@ -64,9 +65,6 @@
 		.range(yRange)
 		.nice();
 
-	// COLOR SCALE
-	$: colorScale = d3.scaleQuantize(COLOR_PALATTE).domain([0, 12]).nice(); // sleep duration
-
 	$: translateGroup = (date: string, radius = outerRadius) => {
 		if ($visMode === MODES.RADIAL) {
 			const theta = xScale(date);
@@ -92,7 +90,7 @@
 	$: annotations = rawAnnotations.filter((a) => xScale.domain().includes(a.date));
 </script>
 
-<div class="vis" bind:clientWidth={width} bind:clientHeight={height}>
+<div class="vis" bind:offsetWidth={width} bind:offsetHeight={height}>
 	<svg>
 		<defs>
 			<filter id="glow">
@@ -116,7 +114,7 @@
 				/>
 			{/each}
 		</g>
-		<g class="bars">
+		<g class="bars" class:hasActiveThresh={$selectedThreshold}>
 			{#each data as [date, logs], i (date)}
 				<g
 					style="
@@ -126,10 +124,13 @@
 				>
 					{#each logs as log, index (index)}
 						<rect
-							fill={colorScale(log.timeToEnd - log.timeToStart)}
+							fill={COLOR_SCALE(log.timeToEnd - log.timeToStart)}
 							rx="3"
 							on:mouseenter={(e) => handleMouseover(e, log)}
 							on:mouseleave={(e) => handleMouseout(e, log)}
+							class:active={$selectedThreshold &&
+								log.timeToEnd - log.timeToStart >= $selectedThreshold[0] &&
+								log.timeToEnd - log.timeToStart < $selectedThreshold[1]}
 							style="q
 							filter:url(#glow);
 							transition-delay: {i * 5}ms;
@@ -148,15 +149,16 @@
 		{tooltipPos}
 		lengthScale={yScale}
 		{hoveredLog}
-		{colorScale}
 	/>
+	<ColorLegend />
 </div>
 
 <style lang="scss">
 	.vis {
 		width: 100%;
 		height: 100%;
-		display: flex;
+		display: grid;
+		overflow: hidden;
 	}
 
 	.vis svg {
@@ -177,6 +179,12 @@
 
 		rect:hover {
 			stroke: blanchedalmond;
+		}
+
+		&.hasActiveThresh {
+			rect:not(.active) {
+				opacity: 0.5;
+			}
 		}
 	}
 </style>

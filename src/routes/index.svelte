@@ -1,5 +1,4 @@
 <script lang="ts" context="module">
-	export const prerender = true;
 	import Vis from '$components/Vis/Vis.svelte';
 	import { visMode } from '$src/store';
 	import { MODES } from '$src/utils/constants';

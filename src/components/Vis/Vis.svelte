@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as d3 from 'd3';
+	import { fade } from 'svelte/transition';
 
 	import type { SleepLog } from '$src/data/types';
 	import { visMode, selectedThreshold } from '$src/store';
@@ -91,66 +92,70 @@
 </script>
 
 <div class="vis" bind:offsetWidth={width} bind:offsetHeight={height}>
-	<svg>
-		<defs>
-			<filter id="glow">
-				<feGaussianBlur stdDeviation=".25" result="coloredBlur" />
-				<feMerge>
-					<feMergeNode in="coloredBlur" />
-					<feMergeNode in="SourceGraphic" />
-				</feMerge>
-			</filter>
-		</defs>
-		<g class="x-axis" />
-		<YAxis {yScale} {width} {height} {padding} {radialBarHeight} {innerRadius} />
-		<g class="annotations">
-			{#each annotations as annotation}
-				<Annotation
-					{annotation}
-					{outerRadius}
-					{yScale}
-					{xScale}
-					groupTransform={$visMode === MODES.RADIAL && `translate(${width / 2}px, ${height / 2}px)`}
-				/>
-			{/each}
-		</g>
-		<g class="bars" class:hasActiveThresh={$selectedThreshold}>
-			{#each data as [date, logs], i (date)}
-				<g
-					style="
+	{#if width && height}
+		<svg>
+			<defs>
+				<filter id="glow">
+					<feGaussianBlur stdDeviation=".25" result="coloredBlur" />
+					<feMerge>
+						<feMergeNode in="coloredBlur" />
+						<feMergeNode in="SourceGraphic" />
+					</feMerge>
+				</filter>
+			</defs>
+			<g class="x-axis" />
+			<YAxis {yScale} {width} {height} {padding} {radialBarHeight} {innerRadius} />
+			<g class="annotations">
+				{#each annotations as annotation}
+					<Annotation
+						{annotation}
+						{outerRadius}
+						{yScale}
+						{xScale}
+						groupTransform={$visMode === MODES.RADIAL &&
+							`translate(${width / 2}px, ${height / 2}px)`}
+					/>
+				{/each}
+			</g>
+			<g class="bars" class:hasActiveThresh={$selectedThreshold}>
+				{#each data as [date, logs], i (date)}
+					<g
+						style="
 				transform: {translateGroup(date)};
 				transition-delay: {i * 5}ms;
 				"
-				>
-					{#each logs as log, index (index)}
-						<rect
-							fill={COLOR_SCALE(log.timeToEnd - log.timeToStart)}
-							rx="3"
-							on:mouseenter={(e) => handleMouseover(e, log)}
-							on:mouseleave={(e) => handleMouseout(e, log)}
-							class:active={$selectedThreshold &&
-								log.timeToEnd - log.timeToStart >= $selectedThreshold[0] &&
-								log.timeToEnd - log.timeToStart < $selectedThreshold[1]}
-							style="q
+					>
+						{#each logs as log, index (index)}
+							<rect
+								fill={COLOR_SCALE(log.timeToEnd - log.timeToStart)}
+								rx="3"
+								on:mouseenter={(e) => handleMouseover(e, log)}
+								on:mouseleave={(e) => handleMouseout(e, log)}
+								in:fade={{ delay: log.id * 1 }}
+								class:active={$selectedThreshold &&
+									log.timeToEnd - log.timeToStart >= $selectedThreshold[0] &&
+									log.timeToEnd - log.timeToStart < $selectedThreshold[1]}
+								style="q
 							filter:url(#glow);
 							transition-delay: {i * 5}ms;
 							transform: translate(0, {yScale(log[yEndMetric])}px);
 							width: {$visMode === MODES.RADIAL ? xScale.bandwidth() * innerRadius : xScale.bandwidth()}px;
 							height: {yScale(log[yStartMetric]) - yScale(log[yEndMetric])}px
 							"
-						/>
-					{/each}
-				</g>
-			{/each}
-		</g>
-	</svg>
-	<Tooltip
-		needsFlip={tooltipPos[0] > width * 0.75}
-		{tooltipPos}
-		lengthScale={yScale}
-		{hoveredLog}
-	/>
-	<ColorLegend />
+							/>
+						{/each}
+					</g>
+				{/each}
+			</g>
+		</svg>
+		<Tooltip
+			needsFlip={tooltipPos[0] > width * 0.75}
+			{tooltipPos}
+			lengthScale={yScale}
+			{hoveredLog}
+		/>
+		<ColorLegend />
+	{/if}
 </div>
 
 <style lang="scss">

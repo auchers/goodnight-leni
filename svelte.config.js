@@ -20,6 +20,7 @@ const config = {
 		paths: {
 			base: dev ? '' : '/newborn-sleep'
 		},
+		appDir: 'internal',
 		// hydrate the <div id="svelte"> element in src/app.html
 		target: '#svelte',
 		vite: {

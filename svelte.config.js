@@ -14,7 +14,9 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({
+			fallback: '200.html'
+		}),
 		paths: {
 			base: dev ? '' : '/newborn-sleep'
 		},

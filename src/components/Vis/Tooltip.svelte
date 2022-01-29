@@ -24,7 +24,7 @@
 		: ''};"
 >
 	{#if hoveredLog}
-		<div class="tooltip-title">{FORMATTERS.dateLabel(hoveredLog.aStart)}</div>
+		<div class="tooltip-title">{FORMATTERS.dateLabel(hoveredLog.Start)}</div>
 		<div class="tooltip-chart">
 			<div
 				class="tooltip-bar"

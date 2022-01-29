@@ -28,7 +28,7 @@
 
 	$: transform = `translate(${x}px, ${y}px)rotate(${rotation}rad)`;
 	$: textAnchor = $visMode === MODES.RADIAL ? (x >= 0 ? 'start' : 'end') : 'start';
-	$: calcDx = $visMode === MODES.RADIAL && (x > outerRadius / 2 ? `${dx}em` : `${-dx}em`);
+	$: calcDx = $visMode === MODES.RADIAL ? (x > outerRadius / 2 ? `${dx}em` : `${-dx}em`) : '-20px';
 	$: Icon = annotation.type === 'event' ? Event : annotation.type === 'growth' ? Growth : Flight;
 </script>
 

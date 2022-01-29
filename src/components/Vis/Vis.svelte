@@ -15,7 +15,7 @@
 
 	let width;
 	let height;
-	let padding = { top: 70, bottom: 90, left: 40, right: 50 };
+	let padding = { top: 90, bottom: 100, left: 40, right: 50 };
 	let tooltipPos: [number, number] | [null, null] = [null, null];
 	let hoveredLog: SleepLog | null;
 
@@ -48,7 +48,7 @@
 		.padding(0.2);
 
 	$: innerRadius = 35;
-	$: radialBarHeight = (Math.min(height, width) - padding.bottom) / 2;
+	$: radialBarHeight = (Math.min(height, width) - padding.bottom - padding.top) / 2;
 	$: outerRadius = radialBarHeight + innerRadius;
 
 	// Y SCALE

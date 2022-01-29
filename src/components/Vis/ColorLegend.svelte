@@ -30,6 +30,7 @@
 <style lang="scss">
 	.color-legend {
 		font-family: Roboto, sans-serif;
+		font-weight: 100;
 		position: absolute;
 		bottom: 0;
 		left: 0.5em;

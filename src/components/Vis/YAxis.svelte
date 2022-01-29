@@ -13,7 +13,7 @@
 
 <g class="y-axis">
 	{#if $visMode !== MODES.RADIAL}
-		{#each yScale.ticks() as tick, index}
+		{#each yScale.ticks(5) as tick, index}
 			<g class="tick tick--{tick}" transform="translate(0,{yScale(tick)})" transition:fade>
 				<line x2={width - padding.right} />
 				<text dy="-.5em"
@@ -22,11 +22,11 @@
 			</g>
 		{/each}
 	{:else}
-		{#each yScale.ticks().reverse() as tick}
+		{#each yScale.ticks(6).reverse() as tick}
 			<g class="tick radial" transition:fade transform={`translate(${width / 2}, ${height / 2})`}>
 				<circle r={radialBarHeight - yScale(tick) + innerRadius} />
 				<text text-anchor="middle" dy=".25em" y={radialBarHeight - yScale(tick) + innerRadius}
-					>{tick} hr</text
+					>{tick} hours since bedtime</text
 				>
 			</g>
 		{/each}
@@ -35,13 +35,15 @@
 
 <style lang="scss">
 	.y-axis {
+		opacity: 0.8;
+		font-weight: 200;
 		.tick {
 			line,
 			circle {
 				stroke: var(--text-color-grey);
-				stroke-dasharray: 3 5;
-				stroke-width: 0.5px;
-				fill: transparent;
+				stroke-dasharray: 3 7;
+				stroke-width: 1px;
+				fill: none;
 				cursor: pointer;
 			}
 			text {

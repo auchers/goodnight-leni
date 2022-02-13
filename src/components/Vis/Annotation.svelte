@@ -23,12 +23,12 @@
 	$: [x, y] =
 		$visMode === MODES.RADIAL
 			? [lineLength * Math.cos(theta), lineLength * Math.sin(theta)]
-			: [theta, yScale.range()[1] / 2];
+			: [theta, yScale.range()[1]];
 	$: rotation = $visMode === MODES.RADIAL ? theta + Math.PI * 0.5 : 0;
 
 	$: transform = `translate(${x}px, ${y}px)rotate(${rotation}rad)`;
 	$: textAnchor = $visMode === MODES.RADIAL ? (x >= 0 ? 'start' : 'end') : 'start';
-	$: calcDx = $visMode === MODES.RADIAL ? (x > outerRadius / 2 ? `${dx}em` : `${-dx}em`) : '-20px';
+	$: calcDx = $visMode === MODES.RADIAL ? (x > outerRadius / 2 ? `${dx}em` : `${-dx}em`) : '-10px';
 	$: Icon = annotation.type === 'event' ? Event : annotation.type === 'growth' ? Growth : Flight;
 </script>
 
@@ -44,8 +44,8 @@
 			<g class="icon">
 				<svelte:component
 					this={Icon}
-					width="2em"
-					height="2em"
+					width="1.5em"
+					height="1.5em"
 					preserveAspectRatio="xMidYMid meet"
 				/>
 			</g>
@@ -69,14 +69,14 @@
 		.annotation-line {
 			line {
 				stroke: var(--text-color-grey);
-				stroke-dasharray: 3 5;
-				stroke-width: 0.5px;
+				// stroke-dasharray: 3 5;
+				stroke-width: 0.25px;
 			}
 		}
 
 		.icon {
-			transform: translate(-1em, -2.1em);
-			width: 2em;
+			transform: translate(-0.75em, -1.5em);
+			width: 0.5em;
 			fill: transparent;
 
 			&:not(:hover) {

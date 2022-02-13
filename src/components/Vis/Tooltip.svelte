@@ -43,11 +43,12 @@
 
 <style lang="scss">
 	.tooltip {
+		--tooltip-background-color: #eee;
 		position: absolute;
 		transition: transform 50ms, opacity 100ms;
 		min-width: 10em;
 		min-height: 10px;
-		background: #fff;
+		background: var(--tooltip-background-color);
 		color: var(--background-color);
 		pointer-events: none;
 		margin: 1em;
@@ -67,16 +68,16 @@
 			left: 0;
 			top: 50%;
 			transform: translate(-100%, -50%);
-			border-color: transparent #fff transparent transparent;
+			border-color: transparent var(--tooltip-background-color) transparent transparent;
 		}
 
 		&.needsFlip::after {
 			left: 100%;
 			transform: translate(0, -50%);
-			border-color: transparent transparent transparent #fff;
+			border-color: transparent transparent transparent var(--tooltip-background-color);
 		}
 		.tooltip-title {
-			font-weight: 700;
+			font-weight: 500;
 			font-variant: all-small-caps;
 			font-size: 1.25em;
 		}
@@ -94,6 +95,7 @@
 
 				.tooltip-time {
 					font-size: 0.75em;
+					opacity: 0.7;
 
 					&.end {
 						margin-left: 0.5em;
@@ -101,10 +103,15 @@
 				}
 			}
 
+			.tooltip-duration {
+				font-size: 0.9em;
+				text-align: end;
+			}
+
 			.tooltip-bar {
-				height: 0.5em;
-				border-radius: 1em;
-				margin-right: 0.5em;
+				height: 0.65em;
+				// border-radius: 1em;
+				margin-right: 0.75em;
 				position: relative;
 
 				&.isLight {
@@ -114,9 +121,9 @@
 				&::before,
 				&::after {
 					content: '';
-					height: 1em;
+					height: 0.76em;
 					width: 1px;
-					border-left: 1px black solid;
+					border-left: 1px grey solid;
 					position: absolute;
 					left: -1px; // adjust for border stroke
 					transform: translateY(-25%);

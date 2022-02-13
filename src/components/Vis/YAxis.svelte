@@ -12,8 +12,24 @@
 </script>
 
 <g class="y-axis">
-	{#if $visMode !== MODES.RADIAL}
-		{#each yScale.ticks(5) as tick, index}
+	{#if $visMode === MODES.RADIAL}
+		<g transform={`translate(${width / 2}, ${height / 2})`}>
+			<text class="caps" text-anchor="middle" dy=".25em">bedtime</text>
+			{#each yScale.ticks(6).reverse() as tick}
+				<g class="tick radial" transition:fade>
+					<circle r={radialBarHeight - yScale(tick) + innerRadius} />
+					<text
+						class="caps"
+						text-anchor="middle"
+						dy=".25em"
+						y={radialBarHeight - yScale(tick) + innerRadius}>{tick} hours since bedtime</text
+					>
+				</g>
+			{/each}
+		</g>
+	{:else}
+		<text class="caps" transform="translate(0, {yScale.range()[1]})">wake up</text>
+		{#each yScale.ticks(5) as tick}
 			<g class="tick tick--{tick}" transform="translate(0,{yScale(tick)})" transition:fade>
 				<line x2={width - padding.right} />
 				<text dy="-.5em"
@@ -21,15 +37,7 @@
 				>
 			</g>
 		{/each}
-	{:else}
-		{#each yScale.ticks(6).reverse() as tick}
-			<g class="tick radial" transition:fade transform={`translate(${width / 2}, ${height / 2})`}>
-				<circle r={radialBarHeight - yScale(tick) + innerRadius} />
-				<text text-anchor="middle" dy=".25em" y={radialBarHeight - yScale(tick) + innerRadius}
-					>{tick} hours since bedtime</text
-				>
-			</g>
-		{/each}
+		<text class="caps" transform="translate(0, {yScale.range()[0]})" dy="1em">bedtime</text>
 	{/if}
 </g>
 
@@ -37,18 +45,26 @@
 	.y-axis {
 		opacity: 0.8;
 		font-weight: 200;
+
+		text {
+			fill: var(--text-color-grey);
+		}
+
+		.caps {
+			font-variant: all-small-caps;
+		}
+
 		.tick {
 			line,
 			circle {
 				stroke: var(--text-color-grey);
-				stroke-dasharray: 3 7;
+				stroke-dasharray: 7 3;
 				stroke-width: 1px;
 				fill: none;
 				cursor: pointer;
 			}
 			text {
-				fill: var(--text-color-grey);
-				font-size: 0.8em;
+				font-size: 0.9em;
 				pointer-events: none;
 				paint-order: stroke;
 				stroke: #535353;
@@ -59,7 +75,7 @@
 				circle {
 					stroke-width: 0.25px;
 				}
-				text {
+				&:not(:first-of-type) text {
 					opacity: 0;
 				}
 			}

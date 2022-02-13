@@ -1,9 +1,9 @@
 import * as d3 from 'd3'
 
 export enum MODES {
-    BAR_RELATIVE = 'BAR RELATIVE',
-    BAR_ABSOLUTE = 'BAR ABSOLUTE',
-    RADIAL = 'RADIAL',
+    BAR_RELATIVE = 'Relative Time Barchart',
+    BAR_ABSOLUTE = 'Absolute Time Barchart',
+    RADIAL = 'Radial Sunburst',
 }
 
 export const FORMATTERS = ({

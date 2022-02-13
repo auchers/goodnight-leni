@@ -29,9 +29,8 @@
 
 <style lang="scss">
 	.color-legend {
-		font-family: Roboto, sans-serif;
+		font-family: 'Roboto Condensed', sans-serif;
 		font-weight: 100;
-		position: absolute;
 		bottom: 0;
 		left: 0.5em;
 
@@ -50,9 +49,8 @@
 				.threshold-swatch {
 					width: 2.5em;
 					height: 1em;
-					border-radius: 5px;
+					// border-radius: 5px;
 					margin-right: 0.25em;
-					cursor: pointer;
 				}
 
 				.threshold-value {

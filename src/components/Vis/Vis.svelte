@@ -11,11 +11,10 @@
 	import YAxis from './YAxis.svelte';
 	import Annotation from './Annotation.svelte';
 	import Tooltip from './Tooltip.svelte';
-	import ColorLegend from './ColorLegend.svelte';
 
 	let width;
 	let height;
-	let padding = { top: 90, bottom: 100, left: 40, right: 50 };
+	let padding = { top: 90, bottom: 60, left: 70, right: 50 };
 	let tooltipPos: [number, number] | [null, null] = [null, null];
 	let hoveredLog: SleepLog | null;
 
@@ -47,8 +46,10 @@
 		.range(xRange)
 		.padding(0.2);
 
-	$: innerRadius = 35;
-	$: radialBarHeight = (Math.min(height, width) - padding.bottom - padding.top) / 2;
+	$: bandWidth = Math.min(xScale.bandwidth(), 2);
+
+	$: innerRadius = 40;
+	$: radialBarHeight = (Math.min(height, width) - padding.bottom - padding.top - 80) / 2; // 40 is to ensure room for icons
 	$: outerRadius = radialBarHeight + innerRadius;
 
 	// Y SCALE
@@ -128,7 +129,6 @@
 						{#each logs as log, index (index)}
 							<rect
 								fill={COLOR_SCALE(log.timeToEnd - log.timeToStart)}
-								rx="3"
 								on:mouseenter={(e) => handleMouseover(e, log)}
 								on:mouseleave={(e) => handleMouseout(e, log)}
 								in:fade={{ delay: log.id * 1 }}
@@ -139,7 +139,7 @@
 							filter:url(#glow);
 							transition-delay: {i * 5}ms;
 							transform: translate(0, {yScale(log[yEndMetric])}px);
-							width: {$visMode === MODES.RADIAL ? xScale.bandwidth() * innerRadius : xScale.bandwidth()}px;
+							width: {$visMode === MODES.RADIAL ? bandWidth * innerRadius : bandWidth}px;
 							height: {yScale(log[yStartMetric]) - yScale(log[yEndMetric])}px
 							"
 							/>
@@ -154,7 +154,6 @@
 			lengthScale={yScale}
 			{hoveredLog}
 		/>
-		<ColorLegend />
 	{/if}
 </div>
 

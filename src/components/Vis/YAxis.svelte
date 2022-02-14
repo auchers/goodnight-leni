@@ -14,8 +14,8 @@
 <g class="y-axis">
 	{#if $visMode === MODES.RADIAL}
 		<g transform={`translate(${width / 2}, ${height / 2})`}>
-			<text class="caps" text-anchor="middle" dy=".25em">bedtime</text>
-			{#each yScale.ticks(6).reverse() as tick}
+			<text class="caps radial" text-anchor="middle" dy=".25em">bedtime</text>
+			{#each yScale.ticks(5).reverse() as tick}
 				<g class="tick radial" transition:fade>
 					<circle r={radialBarHeight - yScale(tick) + innerRadius} />
 					<text
@@ -71,7 +71,7 @@
 				stroke-width: 1px;
 			}
 
-			&.radial:not(:hover) {
+			&.radial {
 				circle {
 					stroke-width: 0.25px;
 				}

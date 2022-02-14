@@ -29,6 +29,7 @@
 
 <style lang="scss">
 	.color-legend {
+		width: max-content;
 		font-family: 'Roboto Condensed', sans-serif;
 		font-weight: 100;
 		bottom: 0;

@@ -14,6 +14,7 @@ export const FORMATTERS = ({
         : `${d - 24} am`),
     dateLabel: d3.utcFormat("%b %d, %Y"),
     hour: d3.format(".1f"),
+    pct: d3.format(".0%"),
     time: d3.utcFormat("%-I:%M %p")
   })
 

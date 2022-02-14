@@ -3,36 +3,21 @@
 	import { fade } from 'svelte/transition';
 
 	import type { SleepLog } from '$src/data/types';
-	import { visMode, selectedThreshold } from '$src/store';
+	import { visMode, selectedThreshold, minHours } from '$src/store';
 
-	import rawData from '$src/data/sleepLogs.csv?raw';
 	import rawAnnotations from '$src/data/annotations.json';
-	import { COLOR_SCALE, FORMATTERS, KEYS, MODES } from '$src/utils/constants';
+	import { COLOR_SCALE, KEYS, MODES } from '$src/utils/constants';
 	import YAxis from './YAxis.svelte';
 	import Annotation from './Annotation.svelte';
 	import Tooltip from './Tooltip.svelte';
+
+	export let data: [string, any[]][];
 
 	let width;
 	let height;
 	let padding = { top: 90, bottom: 60, left: 70, right: 50 };
 	let tooltipPos: [number, number] | [null, null] = [null, null];
 	let hoveredLog: SleepLog | null;
-
-	// DATA + TRANSFORMATIONS
-	let parsedData = d3
-		.csvParse<SleepLog>(rawData, d3.autoType)
-		.filter((d) => d.Type === 'sleep')
-		.map((d, i) => ({ ...d, id: i }));
-
-	/** returns [adjustedDate, [sleepLogs]]*/
-	let data = d3.groups(parsedData, (d) => FORMATTERS.date(d.aStart));
-	data.forEach(([, arr]) => {
-		const minStart = d3.min(arr, (d) => d.timeToStart);
-		arr.forEach((log) => {
-			log.stdTimeToStart = log.timeToStart - minStart;
-			log.stdTimeToEnd = log.timeToEnd - minStart;
-		});
-	});
 
 	// X SCALE
 	$: xRange =
@@ -118,7 +103,7 @@
 					/>
 				{/each}
 			</g>
-			<g class="bars" class:hasActiveThresh={$selectedThreshold}>
+			<g class="bars" class:hasActiveThresh={$selectedThreshold || $minHours}>
 				{#each data as [date, logs], i (date)}
 					<g
 						style="
@@ -132,9 +117,10 @@
 								on:mouseenter={(e) => handleMouseover(e, log)}
 								on:mouseleave={(e) => handleMouseout(e, log)}
 								in:fade={{ delay: log.id * 1 }}
-								class:active={$selectedThreshold &&
+								class:active={($selectedThreshold &&
 									log.timeToEnd - log.timeToStart >= $selectedThreshold[0] &&
-									log.timeToEnd - log.timeToStart < $selectedThreshold[1]}
+									log.timeToEnd - log.timeToStart < $selectedThreshold[1]) ||
+									($minHours && logs.maxDuration >= $minHours)}
 								style="q
 							filter:url(#glow);
 							transition-delay: {i * 5}ms;
@@ -149,7 +135,7 @@
 			</g>
 		</svg>
 		<Tooltip
-			needsFlip={tooltipPos[0] > width * 0.75}
+			needsFlip={tooltipPos[0] > width * 0.5}
 			{tooltipPos}
 			lengthScale={yScale}
 			{hoveredLog}
@@ -174,7 +160,6 @@
 	}
 
 	.bars {
-		cursor: pointer;
 		rect,
 		g {
 			transition: transform var(--fast-transition-duration), width var(--slow-transition-duration),

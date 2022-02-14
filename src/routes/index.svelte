@@ -1,13 +1,35 @@
 <script lang="ts">
+	import * as d3 from 'd3';
+	import rawData from '$src/data/sleepLogs.csv?raw';
+	import type { SleepLog } from '$src/data/types';
+
 	import Vis from '$components/Vis/Vis.svelte';
-	import { visMode } from '$src/store';
-	import { MODES } from '$src/utils/constants';
+	import { minHours, visMode } from '$src/store';
+	import { FORMATTERS, MODES } from '$src/utils/constants';
 	import Absolute from '$src/assets/Absolute.svg';
 	import Relative from '$src/assets/Relative.svg';
 	import Radial from '$src/assets/Radial.svg';
+	import ColorLegend from '$src/components/Vis/ColorLegend.svelte';
 
 	import '../app.scss';
-	import ColorLegend from '$src/components/Vis/ColorLegend.svelte';
+
+	// DATA + TRANSFORMATIONS
+	let parsedData = d3
+		.csvParse<SleepLog>(rawData, d3.autoType)
+		.filter((d) => d.Type === 'sleep')
+		.map((d, i) => ({ ...d, id: i }));
+
+	/** returns [adjustedDate, [sleepLogs]]*/
+	let data = d3.groups(parsedData, (d) => FORMATTERS.date(d.aStart));
+	data.forEach(([, arr]) => {
+		const minStart = d3.min(arr, (d) => d.timeToStart);
+		arr.forEach((log) => {
+			log.stdTimeToStart = log.timeToStart - minStart;
+			log.stdTimeToEnd = log.timeToEnd - minStart;
+		});
+		const maxDuration = d3.max(arr, (d) => d.timeToEnd - d.timeToStart);
+		arr.maxDuration = maxDuration;
+	});
 
 	let highlightedChart: MODES | null = null;
 
@@ -18,6 +40,13 @@
 	function setHoveredChart(mode: MODES | null) {
 		highlightedChart = mode;
 	}
+
+	function setMinHours(e: Event) {
+		const input = e.target as HTMLInputElement;
+		minHours.set(+input.value || null);
+	}
+
+	$: sumNights = data.filter(([, arr]) => arr.maxDuration >= $minHours).length;
 </script>
 
 <div class="main-grid">
@@ -39,25 +68,41 @@
 					><Radial />
 				</button>
 				<button
-					title="absolute bar chart"
-					on:click={() => setMode(MODES.BAR_ABSOLUTE)}
-					class:active={MODES.BAR_ABSOLUTE === $visMode}
-					on:mouseenter={() => setHoveredChart(MODES.BAR_ABSOLUTE)}
-					on:mouseleave={() => setHoveredChart(null)}><Absolute /></button
-				>
-				<button
 					title="relative bar chart"
 					on:click={() => setMode(MODES.BAR_RELATIVE)}
 					class:active={MODES.BAR_RELATIVE === $visMode}
 					on:mouseenter={() => setHoveredChart(MODES.BAR_RELATIVE)}
 					on:mouseleave={() => setHoveredChart(null)}><Relative /></button
 				>
+				<button
+					title="absolute bar chart"
+					on:click={() => setMode(MODES.BAR_ABSOLUTE)}
+					class:active={MODES.BAR_ABSOLUTE === $visMode}
+					on:mouseenter={() => setHoveredChart(MODES.BAR_ABSOLUTE)}
+					on:mouseleave={() => setHoveredChart(null)}><Absolute /></button
+				>
 			</div>
 			<p><span class="caps">Highlight By:</span></p>
 			<ColorLegend />
+			<p class="conclusion caps">
+				Nights with at least <input
+					min="0"
+					max="15"
+					class="hours"
+					type="number"
+					placeholder="0"
+					on:change={setMinHours}
+				/>
+				hours of consecutive sleep:
+			</p>
+			<div class="summary">
+				{sumNights} nights ({FORMATTERS.pct(sumNights / data.length)})
+			</div>
 		</div>
 	</div>
-	<Vis />
+	{#if data}
+		<Vis {data} />
+	{/if}
 </div>
 
 <style lang="scss">
@@ -76,6 +121,28 @@
 		align-content: space-between;
 	}
 
+	.conclusion {
+		margin-top: 1em;
+
+		input.hours {
+			width: 2em;
+			// margin: 0 0.25em;
+			border-bottom: grey 1px dashed;
+			color: var(--text-color-grey);
+			font-size: 0.9em;
+
+			&:focus {
+				outline: none;
+			}
+		}
+	}
+	.summary {
+		font-size: 1em;
+		font-weight: 400;
+		// line-height: 0.7em;
+		margin-top: -0.5em;
+	}
+
 	.caps {
 		font-variant: all-small-caps;
 		font-size: 1.25em;
@@ -87,7 +154,7 @@
 		height: min-content;
 
 		h1 {
-			font-size: 4.5em;
+			font-size: 5em;
 			line-height: 0.9em;
 		}
 	}

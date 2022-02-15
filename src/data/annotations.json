@@ -1,26 +1,20 @@
 [
     {
-        "date": "2021-08-20",
-        "type": "event",
-        "title": "Leni is born",
-        "description": ""
-    },
-    {
         "date": "2021-10-01",
         "type": "event",
         "title": "Begin Sleep Course",
         "description": ""
     },
     {
-        "date": "2022-02-26",
+        "date": "2022-02-18",
         "type": "event",
         "title": "Return to Work",
         "description": ""
     },
     {
         "date": "2021-08-20",
-        "type": "growth",
-        "title": "Leni Born",
+        "type": "event",
+        "title": "Leni Born: 7lbs 13oz",
         "description": "",
         "weight": 7.13,
         "length": 19
@@ -78,6 +72,12 @@
         "description": "to 2021-12-19"
     },
     {
+        "date": "2021-12-19",
+        "type": "travel",
+        "title": "Back from Maui, HI",
+        "description": "to 2021-12-19"
+    },
+    {
         "date": "2022-01-10",
         "type": "travel",
         "title": "Boston, MA",
@@ -87,6 +87,12 @@
         "date": "2022-01-18",
         "type": "travel",
         "title": "Israel",
+        "description": ""
+    },
+    {
+        "date": "2022-02-03",
+        "type": "travel",
+        "title": "Back from Israel",
         "description": ""
     }
 ]

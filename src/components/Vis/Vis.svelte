@@ -15,7 +15,7 @@
 
 	let width;
 	let height;
-	let padding = { top: 90, bottom: 60, left: 70, right: 50 };
+	let padding = { top: 90, bottom: 90, left: 70, right: 50 };
 	let tooltipPos: [number, number] | [null, null] = [null, null];
 	let hoveredLog: SleepLog | null;
 
@@ -34,7 +34,7 @@
 	$: bandWidth = Math.min(xScale.bandwidth(), 2);
 
 	$: innerRadius = 40;
-	$: radialBarHeight = (Math.min(height, width) - padding.bottom - padding.top - 80) / 2; // 40 is to ensure room for icons
+	$: radialBarHeight = (Math.min(height, width) - padding.bottom - padding.top - innerRadius) / 2;
 	$: outerRadius = radialBarHeight + innerRadius;
 
 	// Y SCALE
@@ -49,8 +49,8 @@
 				data.map(([, arr]) => arr.map((d) => [d[yStartMetric], d[yEndMetric]]).flat()).flat()
 			)
 		)
-		.range(yRange)
-		.nice();
+		.range(yRange);
+	// .nice();
 
 	$: translateGroup = (date: string, radius = outerRadius) => {
 		if ($visMode === MODES.RADIAL) {

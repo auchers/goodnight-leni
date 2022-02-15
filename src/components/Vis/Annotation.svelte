@@ -14,10 +14,12 @@
 	export let groupTransform;
 
 	let r = 7;
-	let dx = 0.5; //em
+	let dx = 30; // px
+	let baseDy = 40; // px
 	const { date, title } = annotation;
 
-	$: lineLength = $visMode === MODES.RADIAL ? outerRadius + 50 : yScale.range()[0];
+	$: lineLength =
+		$visMode === MODES.RADIAL ? outerRadius + 10 : yScale.range()[0] - yScale.range()[1];
 	$: theta = xScale(date);
 
 	$: [x, y] =
@@ -28,7 +30,8 @@
 
 	$: transform = `translate(${x}px, ${y}px)rotate(${rotation}rad)`;
 	$: textAnchor = $visMode === MODES.RADIAL ? (x >= 0 ? 'start' : 'end') : 'start';
-	$: calcDx = $visMode === MODES.RADIAL ? (x > outerRadius / 2 ? `${dx}em` : `${-dx}em`) : '-10px';
+	$: calcDx = $visMode === MODES.RADIAL ? Math.cos(theta) * dx : -10;
+	$: calcDy = $visMode === MODES.RADIAL ? Math.sin(theta) * baseDy : -baseDy;
 	$: Icon = annotation.type === 'event' ? Event : annotation.type === 'growth' ? Growth : Flight;
 </script>
 
@@ -40,7 +43,7 @@
 			in:fade={{ delay: 1000 }}
 			out:fade={{ delay: 0 }}
 		>
-			<line y1={0} y2={outerRadius} />
+			<line y1={0} y2={$visMode === MODES.RADIAL ? lineLength - 40 : lineLength} />
 			<g class="icon">
 				<svelte:component
 					this={Icon}
@@ -53,11 +56,11 @@
 
 		<g
 			class="annotation-text"
-			style="transform: translate({x}px, {y - 5}px)"
+			style="transform: translate({x + calcDx}px, {y + calcDy}px)"
 			text-anchor={textAnchor}
 		>
-			<text class="annotation-title" dy="-2em" dx={calcDx}>{title}</text>
-			<text class="annotation-date" dy="-4em" dx={calcDx}>{date}</text>
+			<text class="annotation-date" dy="-.6em">{date}</text>
+			<text class="annotation-title" dy=".6em">{title}</text>
 		</g>
 	</g>
 {/key}

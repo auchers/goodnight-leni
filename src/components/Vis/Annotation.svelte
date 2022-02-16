@@ -8,6 +8,7 @@
 	import Flight from '$src/assets/Flight.svg';
 
 	export let outerRadius;
+	export let innerRadius;
 	export let yScale;
 	export let xScale;
 	export let annotation: AnnotationType;
@@ -43,7 +44,7 @@
 			in:fade={{ delay: 1000 }}
 			out:fade={{ delay: 0 }}
 		>
-			<line y1={0} y2={$visMode === MODES.RADIAL ? lineLength - 40 : lineLength} />
+			<line y1={0} y2={$visMode === MODES.RADIAL ? lineLength - innerRadius : lineLength} />
 			<g class="icon">
 				<svelte:component
 					this={Icon}

@@ -39,3 +39,9 @@ export const COLOR_PALATTE = d3.schemeYlGnBu[6]
 
 	// COLOR SCALE
 export const COLOR_SCALE = d3.scaleQuantize(COLOR_PALATTE).domain([0, 12]).nice(); // sleep duration
+
+export const DATE_RANGE = d3.range(185).map((d) => { // 184 is num days of 6 months
+    const date = new Date("2021-08-20"); // birth date
+    date.setUTCDate(date.getUTCDate() + d);
+    return FORMATTERS.date(date);
+  })

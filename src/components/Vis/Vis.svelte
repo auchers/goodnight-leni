@@ -6,7 +6,7 @@
 	import { visMode, selectedThreshold, minHours } from '$src/store';
 
 	import rawAnnotations from '$src/data/annotations.json';
-	import { COLOR_SCALE, KEYS, MODES } from '$src/utils/constants';
+	import { COLOR_SCALE, DATE_RANGE, KEYS, MODES } from '$src/utils/constants';
 	import YAxis from './YAxis.svelte';
 	import Annotation from './Annotation.svelte';
 	import Tooltip from './Tooltip.svelte';
@@ -25,15 +25,11 @@
 			? [-Math.PI / 2, 1.5 * Math.PI]
 			: [padding.left, width - padding.right];
 
-	$: xScale = d3
-		.scaleBand()
-		.domain(['2021-08-20', ...data.map(([d]) => d)]) // add in birthday manually
-		.range(xRange)
-		.padding(0.2);
+	$: xScale = d3.scaleBand().domain(DATE_RANGE).range(xRange).padding(0.2);
 
 	$: bandWidth = Math.min(xScale.bandwidth(), 2);
 
-	$: innerRadius = 40;
+	$: innerRadius = 60;
 	$: radialBarHeight = (Math.min(height, width) - padding.bottom - padding.top - innerRadius) / 2;
 	$: outerRadius = radialBarHeight + innerRadius;
 
@@ -75,6 +71,7 @@
 
 	// only include annotations that exist in domain
 	$: annotations = rawAnnotations.filter((a) => xScale.domain().includes(a.date));
+	console.log(`rawAnnotations`, rawAnnotations);
 </script>
 
 <div class="vis" bind:offsetWidth={width} bind:offsetHeight={height}>
@@ -96,6 +93,7 @@
 					<Annotation
 						{annotation}
 						{outerRadius}
+						{innerRadius}
 						{yScale}
 						{xScale}
 						groupTransform={$visMode === MODES.RADIAL &&

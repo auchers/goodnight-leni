@@ -58,7 +58,7 @@
 			line,
 			circle {
 				stroke: var(--text-color-grey);
-				stroke-dasharray: 7 3;
+				stroke-dasharray: 3 7;
 				stroke-width: 1px;
 				fill: none;
 				cursor: pointer;

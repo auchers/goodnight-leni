@@ -10,6 +10,7 @@
 	import YAxis from './YAxis.svelte';
 	import Annotation from './Annotation.svelte';
 	import Tooltip from './Tooltip.svelte';
+	import XAxis from './XAxis.svelte';
 
 	export let data: [string, any[]][];
 
@@ -29,7 +30,7 @@
 
 	$: bandWidth = Math.min(xScale.bandwidth(), 2);
 
-	$: innerRadius = 60;
+	$: innerRadius = 50;
 	$: radialBarHeight = (Math.min(height, width) - padding.bottom - padding.top - innerRadius) / 2;
 	$: outerRadius = radialBarHeight + innerRadius;
 
@@ -71,7 +72,6 @@
 
 	// only include annotations that exist in domain
 	$: annotations = rawAnnotations.filter((a) => xScale.domain().includes(a.date));
-	console.log(`rawAnnotations`, rawAnnotations);
 </script>
 
 <div class="vis" bind:offsetWidth={width} bind:offsetHeight={height}>
@@ -86,28 +86,25 @@
 					</feMerge>
 				</filter>
 			</defs>
-			<g class="x-axis" />
-			<YAxis {yScale} {width} {height} {padding} {radialBarHeight} {innerRadius} />
-			<g class="annotations">
-				{#each annotations as annotation}
-					<Annotation
-						{annotation}
-						{outerRadius}
-						{innerRadius}
-						{yScale}
-						{xScale}
-						groupTransform={$visMode === MODES.RADIAL &&
-							`translate(${width / 2}px, ${height / 2}px)`}
-					/>
-				{/each}
+			<g
+				style={$visMode === MODES.RADIAL &&
+					`transform: translate(${width / 2}px, ${height / 2}px) `}
+			>
+				<YAxis {yScale} {width} {padding} {radialBarHeight} {innerRadius} />
+				<XAxis {xScale} {yScale} {outerRadius} />
+				<g class="annotations">
+					{#each annotations as annotation}
+						<Annotation {annotation} {outerRadius} {innerRadius} {yScale} {xScale} />
+					{/each}
+				</g>
 			</g>
 			<g class="bars" class:hasActiveThresh={$selectedThreshold || $minHours}>
 				{#each data as [date, logs], i (date)}
 					<g
 						style="
-				transform: {translateGroup(date)};
-				transition-delay: {i * 5}ms;
-				"
+					transform: {translateGroup(date)};
+					transition-delay: {i * 5}ms;
+					"
 					>
 						{#each logs as log, index (index)}
 							<rect
@@ -120,12 +117,12 @@
 									log.timeToEnd - log.timeToStart < $selectedThreshold[1]) ||
 									($minHours && logs.maxDuration >= $minHours)}
 								style="q
-							filter:url(#glow);
-							transition-delay: {i * 5}ms;
-							transform: translate(0, {yScale(log[yEndMetric])}px);
-							width: {$visMode === MODES.RADIAL ? bandWidth * innerRadius : bandWidth}px;
-							height: {yScale(log[yStartMetric]) - yScale(log[yEndMetric])}px
-							"
+								filter:url(#glow);
+								transition-delay: {i * 5}ms;
+								transform: translate(0, {yScale(log[yEndMetric])}px);
+								width: {$visMode === MODES.RADIAL ? bandWidth * innerRadius : bandWidth}px;
+								height: {yScale(log[yStartMetric]) - yScale(log[yEndMetric])}px
+								"
 							/>
 						{/each}
 					</g>

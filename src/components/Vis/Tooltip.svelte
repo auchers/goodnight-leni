@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { SleepLog } from '$src/data/types';
 	import { COLOR_SCALE, FORMATTERS } from '$src/utils/constants';
-	import type { ScaleLinear, ScaleQuantize } from 'd3';
+	import type { ScaleLinear } from 'd3';
 	import Color from 'color';
 
 	export let tooltipPos: [number, number] | [null, null];

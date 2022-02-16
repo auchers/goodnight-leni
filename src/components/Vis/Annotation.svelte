@@ -12,9 +12,7 @@
 	export let yScale;
 	export let xScale;
 	export let annotation: AnnotationType;
-	export let groupTransform;
 
-	let r = 7;
 	let dx = 30; // px
 	let baseDy = 40; // px
 	const { date, title } = annotation;
@@ -37,13 +35,8 @@
 </script>
 
 {#key $visMode}
-	<g class="annotation" style="transform: {groupTransform};">
-		<g
-			class="annotation-line"
-			style="transform: {transform};"
-			in:fade={{ delay: 1000 }}
-			out:fade={{ delay: 0 }}
-		>
+	<g class="annotation">
+		<g class="annotation-line" style="transform: {transform};" in:fade={{ delay: 1000 }}>
 			<line y1={0} y2={$visMode === MODES.RADIAL ? lineLength - innerRadius : lineLength} />
 			<g class="icon">
 				<svelte:component
@@ -92,6 +85,7 @@
 			fill: var(--text-color-grey);
 			font-weight: 200;
 			opacity: 0;
+			pointer-events: none;
 
 			&.annotation-date {
 				font-size: 0.75em;

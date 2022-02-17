@@ -33,10 +33,6 @@
 
 	let highlightedChart: MODES | null = null;
 
-	function setMode(mode: MODES) {
-		visMode.set(mode);
-	}
-
 	function setHoveredChart(mode: MODES | null) {
 		highlightedChart = mode;
 	}
@@ -61,7 +57,7 @@
 				<button
 					class="radial"
 					title="radial chart"
-					on:click={() => setMode(MODES.RADIAL)}
+					on:click={() => visMode.set(MODES.RADIAL)}
 					class:active={MODES.RADIAL === $visMode}
 					on:mouseenter={() => setHoveredChart(MODES.RADIAL)}
 					on:mouseleave={() => setHoveredChart(null)}
@@ -69,14 +65,14 @@
 				</button>
 				<button
 					title="relative bar chart"
-					on:click={() => setMode(MODES.BAR_RELATIVE)}
+					on:click={() => visMode.set(MODES.BAR_RELATIVE)}
 					class:active={MODES.BAR_RELATIVE === $visMode}
 					on:mouseenter={() => setHoveredChart(MODES.BAR_RELATIVE)}
 					on:mouseleave={() => setHoveredChart(null)}><Relative /></button
 				>
 				<button
 					title="absolute bar chart"
-					on:click={() => setMode(MODES.BAR_ABSOLUTE)}
+					on:click={() => visMode.set(MODES.BAR_ABSOLUTE)}
 					class:active={MODES.BAR_ABSOLUTE === $visMode}
 					on:mouseenter={() => setHoveredChart(MODES.BAR_ABSOLUTE)}
 					on:mouseleave={() => setHoveredChart(null)}><Absolute /></button
@@ -127,7 +123,6 @@
 
 		input.hours {
 			width: 2em;
-			// margin: 0 0.25em;
 			border-bottom: grey 1px dashed;
 			color: var(--text-color-grey);
 			font-size: 0.9em;

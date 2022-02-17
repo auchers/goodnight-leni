@@ -108,6 +108,7 @@
 		width: 100vw;
 		height: 100vh;
 		padding: 1rem 3rem;
+		padding-right: 5em;
 	}
 
 	.right-panel {

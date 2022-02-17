@@ -10,7 +10,7 @@
 	export let yScale: ScaleLinear<any, any>;
 
 	let textOffset = 10;
-	let radiusOffset = 40;
+	let radiusOffset = 50;
 
 	$: segments = d3.range(6).map((d) => {
 		const startDate = new Date(START_DATE);

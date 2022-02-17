@@ -30,7 +30,7 @@
 
 	$: bandWidth = Math.min(xScale.bandwidth(), 2);
 
-	$: innerRadius = 50;
+	$: innerRadius = 60;
 	$: radialBarHeight = (Math.min(height, width) - padding.bottom - padding.top - innerRadius) / 2;
 	$: outerRadius = radialBarHeight + innerRadius;
 

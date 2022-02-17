@@ -15,7 +15,7 @@
 
 	let dx = 30; // px
 	let baseDy = 40; // px
-	let annotationPadding = 20; // length from outerradius
+	let annotationPadding = 10; // length from outerradius
 	const { date, title } = annotation;
 
 	$: lineLength =

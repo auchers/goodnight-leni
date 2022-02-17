@@ -116,6 +116,7 @@
 
 	.right-panel {
 		padding: 2em;
+		padding-bottom: 3em;
 		display: flex;
 		flex-wrap: wrap;
 		align-content: space-between;
@@ -191,5 +192,39 @@
 	button {
 		all: unset;
 		cursor: pointer;
+	}
+
+	@media (max-width: 768px) {
+		.main-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.right-panel {
+			padding: 0.75em 0;
+		}
+
+		header {
+			h1 {
+				font-size: 3em;
+			}
+		}
+
+		.caps,
+		p,
+		.summary {
+			font-size: 1em;
+		}
+
+		.buttons {
+			margin-bottom: 0.25em;
+
+			button {
+				width: 1em;
+
+				&.radial {
+					width: 1.5em;
+				}
+			}
+		}
 	}
 </style>

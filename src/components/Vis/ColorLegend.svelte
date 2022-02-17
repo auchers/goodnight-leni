@@ -64,4 +64,18 @@
 			text-align: center;
 		}
 	}
+
+	@media (max-width: 768px) {
+		.color-legend {
+			.thresholds {
+				.threshold {
+					font-size: 0.9em;
+					.threshold-swatch {
+						width: 1.5em;
+						height: 0.9em;
+					}
+				}
+			}
+		}
+	}
 </style>

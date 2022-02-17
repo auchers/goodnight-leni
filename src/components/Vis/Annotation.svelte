@@ -15,10 +15,13 @@
 
 	let dx = 30; // px
 	let baseDy = 40; // px
+	let annotationPadding = 20; // length from outerradius
 	const { date, title } = annotation;
 
 	$: lineLength =
-		$visMode === MODES.RADIAL ? outerRadius + 10 : yScale.range()[0] - yScale.range()[1];
+		$visMode === MODES.RADIAL
+			? outerRadius + annotationPadding
+			: yScale.range()[0] - yScale.range()[1];
 	$: theta = xScale(date);
 
 	$: [x, y] =

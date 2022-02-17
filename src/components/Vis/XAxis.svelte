@@ -8,10 +8,9 @@
 
 	export let xScale: ScaleBand<string>;
 	export let yScale: ScaleLinear<any, any>;
-	export let outerRadius: number;
 
-	let textOffset = 12;
-	let radiusOffset = 50;
+	let textOffset = 10;
+	let radiusOffset = 40;
 
 	$: segments = d3.range(6).map((d) => {
 		const startDate = new Date(START_DATE);
@@ -24,8 +23,9 @@
 		if ($visMode === MODES.RADIAL) {
 			const arc = d3
 				.arc()
-				.innerRadius(outerRadius + radiusOffset)
-				.outerRadius(outerRadius + radiusOffset)
+				.padAngle(0.1)
+				.innerRadius(radiusOffset)
+				.outerRadius(radiusOffset)
 				.startAngle(xScale(FORMATTERS.date(startDate)) + Math.PI * 0.5)
 				.endAngle(xScale(FORMATTERS.date(endDate)) + Math.PI * 0.5);
 			return arc;
@@ -38,8 +38,8 @@
 		const [x, y] = arc.centroid();
 		const centroidTheta = Math.atan2(y, x);
 		const [newX, newY] = [
-			x + Math.cos(centroidTheta) * textOffset,
-			y + Math.sin(centroidTheta) * textOffset
+			x - Math.cos(centroidTheta) * textOffset,
+			y - Math.sin(centroidTheta) * textOffset
 		];
 		return `transform: translate(${newX}px, ${newY}px)`;
 	};
@@ -77,7 +77,7 @@
 			}
 			text {
 				fill: var(--text-color-grey);
-				font-size: 1em;
+				font-size: 0.75em;
 				cursor: default;
 				-webkit-user-select: none;
 				-moz-user-select: none;
@@ -86,7 +86,9 @@
 			}
 
 			&:not(:hover) {
-				opacity: 0.5;
+				text {
+					opacity: 0.25;
+				}
 
 				path {
 					opacity: 0.5;

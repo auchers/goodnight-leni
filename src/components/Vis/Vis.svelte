@@ -91,7 +91,7 @@
 					`transform: translate(${width / 2}px, ${height / 2}px) `}
 			>
 				<YAxis {yScale} {width} {padding} {radialBarHeight} {innerRadius} />
-				<XAxis {xScale} {yScale} {outerRadius} />
+				<XAxis {xScale} {yScale} />
 				<g class="annotations">
 					{#each annotations as annotation}
 						<Annotation {annotation} {outerRadius} {innerRadius} {yScale} {xScale} />

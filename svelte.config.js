@@ -16,7 +16,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		paths: {
-			base: dev ? '' : '/newborn-sleep'
+			base: dev ? '' : '/goodnight-leni'
 		},
 		appDir: 'internal',
 		// hydrate the <div id="svelte"> element in src/app.html

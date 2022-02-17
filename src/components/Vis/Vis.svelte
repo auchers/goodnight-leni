@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 
 	import type { SleepLog } from '$src/data/types';
-	import { visMode, selectedThreshold, minHours } from '$src/store';
+	import { visMode, selectedThreshold, minHours, hoveredMonth } from '$src/store';
 
 	import rawAnnotations from '$src/data/annotations.json';
 	import { COLOR_SCALE, DATE_RANGE, KEYS, MODES } from '$src/utils/constants';
@@ -72,6 +72,19 @@
 
 	// only include annotations that exist in domain
 	$: annotations = rawAnnotations.filter((a) => xScale.domain().includes(a.date));
+
+	$: isActive = (log: SleepLog, maxDuration) => {
+		if ($hoveredMonth) {
+			const [start, end] = $hoveredMonth;
+			return log.aStart >= start && log.aStart <= end;
+		}
+		return (
+			($selectedThreshold &&
+				log.timeToEnd - log.timeToStart >= $selectedThreshold[0] &&
+				log.timeToEnd - log.timeToStart < $selectedThreshold[1]) ||
+			($minHours && maxDuration >= $minHours)
+		);
+	};
 </script>
 
 <div class="vis" bind:offsetWidth={width} bind:offsetHeight={height}>
@@ -98,7 +111,7 @@
 					{/each}
 				</g>
 			</g>
-			<g class="bars" class:hasActiveThresh={$selectedThreshold || $minHours}>
+			<g class="bars" class:hasActiveThresh={$selectedThreshold || $minHours || $hoveredMonth}>
 				{#each data as [date, logs], i (date)}
 					<g
 						style="
@@ -112,10 +125,7 @@
 								on:mouseenter={(e) => handleMouseover(e, log)}
 								on:mouseleave={(e) => handleMouseout(e, log)}
 								in:fade={{ delay: log.id * 1 }}
-								class:active={($selectedThreshold &&
-									log.timeToEnd - log.timeToStart >= $selectedThreshold[0] &&
-									log.timeToEnd - log.timeToStart < $selectedThreshold[1]) ||
-									($minHours && logs.maxDuration >= $minHours)}
+								class:active={isActive(log, logs.maxDuration)}
 								style="q
 								filter:url(#glow);
 								transition-delay: {i * 5}ms;

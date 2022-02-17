@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { visMode } from '$src/store';
+	import { hoveredMonth, visMode } from '$src/store';
 	import { FORMATTERS, MODES, START_DATE } from '$src/utils/constants';
 
 	import type { ScaleBand, ScaleLinear } from 'd3';
@@ -28,9 +28,14 @@
 				.outerRadius(radiusOffset)
 				.startAngle(xScale(FORMATTERS.date(startDate)) + Math.PI * 0.5)
 				.endAngle(xScale(FORMATTERS.date(endDate)) + Math.PI * 0.5);
-			return arc;
+			return { arc, startDate, endDate };
 		} else {
-			return [xScale(FORMATTERS.date(startDate)), xScale(FORMATTERS.date(endDate))];
+			return {
+				startDate,
+				endDate,
+				x1: xScale(FORMATTERS.date(startDate)),
+				x2: xScale(FORMATTERS.date(endDate))
+			};
 		}
 	});
 
@@ -45,23 +50,30 @@
 	};
 
 	$: y = yScale.range()[0] + 20;
-
-	$: {
-		console.log(`segments`, segments, $visMode);
-	}
 </script>
 
 <g class="XAxis">
-	{#each segments as arc, i}
+	{#each segments as { arc, startDate, endDate, x1, x2 }, i}
 		{#if $visMode === MODES.RADIAL}
-			<g class="month-arc" in:fade={{ delay: 1000 }}>
+			<g
+				class="month-arc"
+				in:fade={{ delay: 1000 }}
+				on:mouseenter={() => hoveredMonth.set([startDate, endDate])}
+				on:mouseleave={() => hoveredMonth.set(null)}
+			>
 				<path d={arc(null)} />
 				<text text-anchor="middle" style={textTransform(arc)} dy=".25em">{i + 1}</text>
 			</g>
 		{:else}
-			<g class="month-arc" transform="translate(0,{y})" in:fade={{ delay: 1000 }}>
-				<path d={`M ${arc[0]} 0  H ${arc[1]}`} />
-				<text text-anchor="middle" x={(arc[0] + arc[1]) / 2} dy="1.25em">{i + 1}</text>
+			<g
+				class="month-arc"
+				transform="translate(0,{y})"
+				in:fade={{ delay: 1000 }}
+				on:mouseenter={() => hoveredMonth.set([startDate, endDate])}
+				on:mouseleave={() => hoveredMonth.set(null)}
+			>
+				<path d={`M ${x1} 0  H ${x2}`} />
+				<text text-anchor="middle" x={(x1 + x2) / 2} dy="1.25em">{i + 1}</text>
 			</g>
 		{/if}
 	{/each}
@@ -83,6 +95,8 @@
 				-moz-user-select: none;
 				-ms-user-select: none;
 				user-select: none;
+				stroke-width: 3px;
+				stroke: transparent;
 			}
 
 			&:not(:hover) {

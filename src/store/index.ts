@@ -5,4 +5,6 @@ export const visMode = writable<MODES>(MODES.RADIAL)
 
 export const selectedThreshold = writable<[number, number] | null>(null);
 
+export const hoveredMonth = writable<[Date, Date] | null>(null);
+
 export const minHours = writable<number | null>(null)

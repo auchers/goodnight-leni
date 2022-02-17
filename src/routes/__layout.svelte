@@ -2,9 +2,8 @@
 	import MobileFallback from '$src/components/MobileFallback.svelte';
 
 	let pauseTransitionTimer;
-	let width = window.innerWidth;
+	let width;
 	const pauseTransitions = () => {
-		width = window.innerWidth;
 		document.body.classList.add('no-transition');
 		clearTimeout(pauseTransitionTimer);
 		pauseTransitionTimer = setTimeout(() => {
@@ -15,7 +14,7 @@
 	$: isMobile = width <= 768;
 </script>
 
-<svelte:window on:resize={pauseTransitions} />
+<svelte:window on:resize={pauseTransitions} bind:innerWidth={width} />
 {#if isMobile}
 	<MobileFallback />
 {:else}

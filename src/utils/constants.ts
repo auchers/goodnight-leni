@@ -25,7 +25,7 @@ export const KEYS = ({
     STD_TIME_TO_END: "stdTimeToEnd",    
 })
 
-export const COLOR_PALATTE = d3.schemeYlGnBu[6]
+export const COLOR_PALATTE = d3.schemeYlGnBu[5]
 // export const COLOR_PALATTE = [
 //     '#F7E733', // yellow
 //     '#52AC20', // lightgreen
@@ -38,7 +38,9 @@ export const COLOR_PALATTE = d3.schemeYlGnBu[6]
 // ]
 
 	// COLOR SCALE
-export const COLOR_SCALE = d3.scaleQuantize(COLOR_PALATTE).domain([0, 12]).nice(); // sleep duration
+export const COLOR_SCALE = d3.scaleQuantize(COLOR_PALATTE)
+.domain([0, 10])
+.nice(); // sleep duration
 
 export const START_DATE = "2021-08-20"
 

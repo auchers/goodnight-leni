@@ -10,6 +10,7 @@
 	import Relative from '$src/assets/Relative.svg';
 	import Radial from '$src/assets/Radial.svg';
 	import ColorLegend from '$src/components/Vis/ColorLegend.svelte';
+	import Header from '$src/components/Header.svelte';
 
 	import '../app.scss';
 
@@ -46,58 +47,60 @@
 </script>
 
 <div class="main-grid">
-	<div class="right-panel">
-		<header>
-			<h1>Goodnight Leni</h1>
-			<p>Tracking the first six months of newborn sleep</p>
-		</header>
-		<div>
-			<p><span class="caps">View As:</span> {highlightedChart || $visMode}</p>
-			<div class="buttons">
-				<button
-					class="radial"
-					title="radial chart"
-					on:click={() => visMode.set(MODES.RADIAL)}
-					class:active={MODES.RADIAL === $visMode}
-					on:mouseenter={() => setHoveredChart(MODES.RADIAL)}
-					on:mouseleave={() => setHoveredChart(null)}
-					><Radial />
-				</button>
-				<button
-					title="relative bar chart"
-					on:click={() => visMode.set(MODES.BAR_RELATIVE)}
-					class:active={MODES.BAR_RELATIVE === $visMode}
-					on:mouseenter={() => setHoveredChart(MODES.BAR_RELATIVE)}
-					on:mouseleave={() => setHoveredChart(null)}><Relative /></button
-				>
-				<button
-					title="absolute bar chart"
-					on:click={() => visMode.set(MODES.BAR_ABSOLUTE)}
-					class:active={MODES.BAR_ABSOLUTE === $visMode}
-					on:mouseenter={() => setHoveredChart(MODES.BAR_ABSOLUTE)}
-					on:mouseleave={() => setHoveredChart(null)}><Absolute /></button
-				>
+	<div class="left-panel">
+		<Header />
+		<div class="selections">
+			<div class="selection view-as">
+				<p><span class="caps">View As:</span> {highlightedChart || $visMode}</p>
+				<div class="buttons">
+					<button
+						class="radial"
+						title="radial chart"
+						on:click={() => visMode.set(MODES.RADIAL)}
+						class:active={MODES.RADIAL === $visMode}
+						on:mouseenter={() => setHoveredChart(MODES.RADIAL)}
+						on:mouseleave={() => setHoveredChart(null)}
+						><Radial />
+					</button>
+					<button
+						title="relative bar chart"
+						on:click={() => visMode.set(MODES.BAR_RELATIVE)}
+						class:active={MODES.BAR_RELATIVE === $visMode}
+						on:mouseenter={() => setHoveredChart(MODES.BAR_RELATIVE)}
+						on:mouseleave={() => setHoveredChart(null)}><Relative /></button
+					>
+					<button
+						title="absolute bar chart"
+						on:click={() => visMode.set(MODES.BAR_ABSOLUTE)}
+						class:active={MODES.BAR_ABSOLUTE === $visMode}
+						on:mouseenter={() => setHoveredChart(MODES.BAR_ABSOLUTE)}
+						on:mouseleave={() => setHoveredChart(null)}><Absolute /></button
+					>
+				</div>
 			</div>
-			<p><span class="caps">Highlight By:</span></p>
-			<ColorLegend />
-			<p class="conclusion caps">
-				Nights with at least <input
+			<div class="selection highlight-by">
+				<p><span class="caps">Highlight By:</span> # of Hours Slept</p>
+				<ColorLegend />
+			</div>
+		</div>
+	</div>
+	{#if data}
+		<div class="right-panel">
+			<Vis {data} />
+			<div class="summary">
+				<span class="conclusion caps"> Number of nights she slept at least </span><input
 					min="0"
 					max="15"
 					class="hours"
 					type="number"
 					placeholder="0"
 					on:change={setMinHours}
-				/>
-				hours of consecutive sleep:
-			</p>
-			<div class="summary">
-				{sumNights} nights ({FORMATTERS.pct(sumNights / data.length)})
+				/><span class="caps"> hours straight: </span>
+				<span>
+					{sumNights} nights ({FORMATTERS.pct(sumNights / data.length)})
+				</span>
 			</div>
 		</div>
-	</div>
-	{#if data}
-		<Vis {data} />
 	{/if}
 </div>
 
@@ -107,53 +110,66 @@
 		grid-template-columns: min-content 1fr;
 		width: 100vw;
 		height: 100vh;
-		padding: 1rem 3rem;
+		padding: 1rem 2rem;
 		padding-right: 5em;
+		padding-bottom: 3em;
 	}
 
-	.right-panel {
+	.left-panel {
 		padding: 2em;
-		padding-bottom: 3em;
+		padding-bottom: 0;
 		display: flex;
 		flex-wrap: wrap;
 		align-content: space-between;
 	}
 
-	.conclusion {
-		margin-top: 1em;
+	.right-panel {
+		display: grid;
+		grid-template-rows: 1fr min-content;
+		align-items: center;
+	}
 
-		input.hours {
-			width: 2em;
-			border-bottom: grey 1px dashed;
-			color: var(--text-color-grey);
-			font-size: 0.9em;
+	.selections {
+		display: flex;
+		flex-shrink: 0;
 
-			&:focus {
-				outline: none;
-			}
+		.selection {
+			margin-right: 1em;
+			display: flex;
+			flex-wrap: wrap;
+			justify-items: space-between;
+			width: 200px;
+		}
+
+		.view-as {
+			white-space: nowrap;
 		}
 	}
+
+	.conclusion {
+		margin-top: 1em;
+	}
+	input.hours {
+		width: 2em;
+		border-bottom: grey 1px dashed;
+		font-size: 1em;
+		color: var(--text-blue);
+
+		&:focus {
+			outline: none;
+		}
+	}
+
 	.summary {
 		font-size: 1em;
 		font-weight: 400;
-		// line-height: 0.7em;
-		margin-top: -0.5em;
+		text-align: center;
 	}
 
 	.caps {
-		font-variant: all-small-caps;
-		font-size: 1.25em;
-		font-weight: 500;
+		font-size: 18px;
+		font-weight: 300;
 		opacity: 0.7;
-	}
-
-	header {
-		height: min-content;
-
-		h1 {
-			font-size: 5em;
-			line-height: 0.9em;
-		}
 	}
 
 	p {
@@ -161,7 +177,6 @@
 	}
 
 	.buttons {
-		margin-bottom: 1.5em;
 		display: flex;
 
 		:not(.active) {
@@ -195,14 +210,8 @@
 			grid-template-columns: 1fr;
 		}
 
-		.right-panel {
+		.left-panel {
 			padding: 0.75em 0;
-		}
-
-		header {
-			h1 {
-				font-size: 3em;
-			}
 		}
 
 		.caps,

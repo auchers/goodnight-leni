@@ -15,16 +15,15 @@
 				on:mouseenter={() => setThreshold(i)}
 				on:mouseleave={() => selectedThreshold.set(null)}
 			>
+				<div class="threshold-value">{threshold}</div>
 				<div
 					class="threshold-swatch"
 					class:active={$selectedThreshold && $selectedThreshold[0] === threshold}
 					style="background-color: {COLOR_SCALE(threshold)};"
 				/>
-				<div class="threshold-value">{threshold}</div>
 			</div>
 		{/each}
 	</div>
-	<div class="legend-title"># of hours slept</div>
 </div>
 
 <style lang="scss">
@@ -34,6 +33,7 @@
 		font-weight: 100;
 		bottom: 0;
 		left: 0.5em;
+		padding-left: 5px;
 
 		.thresholds {
 			display: flex;
@@ -48,8 +48,8 @@
 				display: grid;
 
 				.threshold-swatch {
-					width: 2.5em;
-					height: 1em;
+					width: 30px;
+					height: 17px;
 					// border-radius: 5px;
 					margin-right: 0.25em;
 				}

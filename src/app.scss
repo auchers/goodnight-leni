@@ -1,8 +1,11 @@
 :root {
 	// --background-color: #0f102e;
-	--background-color: #0c1a22;
+	--background-color: #0c1a28;
 	// --background-color: #3C3C3C;
 	--text-color-grey: #bdbdbd;
+	--text-light-blue: #e0f3ff;
+	--text-blue: #cce4f3;
+	--text-yellow-shadow: #ffffcc;
 	--fast-transition-duration: 500ms;
 	--slow-transition-duration: 1000ms;
 
@@ -52,13 +55,9 @@ input {
 
 body {
 	background-color: var(--background-color);
-	color: var(--text-color-grey);
+	color: var(--text-blue);
 	font-family: 'Roboto Condensed', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
 		'Helvetica Neue', sans-serif;
-}
-
-header {
-	font-family: 'Poiret One', sans-serif;
 }
 
 .no-transition * {

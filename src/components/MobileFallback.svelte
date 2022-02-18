@@ -1,12 +1,10 @@
 <script lang="ts">
 	import imgURL from '$src/assets/FallbackImage.png';
+	import Header from './Header.svelte';
 </script>
 
 <div class="fallback">
-	<header>
-		<h1>Goodnight Leni</h1>
-		<p>Tracking the first six months of newborn sleep</p>
-	</header>
+	<Header />
 	<div class="image-container">
 		<img src={imgURL} alt="fallback of radial barchart" />
 	</div>
@@ -25,12 +23,6 @@
 		flex-shrink: 0;
 		flex-wrap: wrap;
 		padding: 1em;
-
-		header {
-			padding: 1em 0;
-			// font-size: 3em;
-			// line-height: 0.9em;
-		}
 
 		.image-container {
 			margin-top: 2em;

@@ -74,6 +74,7 @@
 				on:mouseleave={() => hoveredMonth.set(null)}
 			>
 				<path d={`M ${x1} 0  H ${x2}`} />
+				<path class="transparent" d={`M ${x1} 0  H ${x2}`} />
 				<text text-anchor="middle" x={(x1 + x2) / 2} dy="1.25em">{i + 1}</text>
 			</g>
 		{/if}

@@ -94,7 +94,7 @@
 					class="hours"
 					type="number"
 					placeholder="0"
-					on:change={setMinHours}
+					bind:value={$minHours}
 				/><span class="caps"> hours straight: </span>
 				<span>
 					{sumNights} nights ({FORMATTERS.pct(sumNights / data.length)})

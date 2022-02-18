@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import MobileFallback from '$src/components/MobileFallback.svelte';
 
 	let pauseTransitionTimer;

@@ -8,7 +8,7 @@
 	<p data-before="Six months of newborn sleep">Six months of newborn sleep</p>
 	<br />
 	<div class="author-info">
-		<div>Created by Aucher Serr, 2022</div>
+		<div>Created by Aucher Serr</div>
 		<div class="icons">
 			<a href="https://www.aucherserr.com" target="_blank" title="personal website"><Logo /></a>
 			<a href="https://github.com/auchers/goodnight-leni" target="_blank" title="github"

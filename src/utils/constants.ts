@@ -1,31 +1,29 @@
-import * as d3 from 'd3'
+import * as d3 from 'd3';
 
 export enum MODES {
-    BAR_RELATIVE = 'Relative Time Barchart',
-    BAR_ABSOLUTE = 'Absolute Time Barchart',
-    RADIAL = 'Radial Sunburst',
+	BAR_RELATIVE = 'Relative Time Barchart',
+	BAR_ABSOLUTE = 'Absolute Time Barchart',
+	RADIAL = 'Radial Sunburst'
 }
 
-export const FORMATTERS = ({
-    date: d3.utcFormat("%Y-%m-%d"),
-    dateParse: d3.utcParse("%Y-%m-%d"),
-    yTickFormat: (d):string => (d < 24 
-        ? `${d - 12} pm` 
-        : `${d - 24} am`),
-    dateLabel: d3.utcFormat("%b %d, %Y"),
-    hour: d=> `${Math.floor(d)}hr ${Math.round((d%1) * 60)}min`,
-    pct: d3.format(".0%"),
-    time: d3.utcFormat("%-I:%M %p")
-  })
+export const FORMATTERS = {
+	date: d3.utcFormat('%Y-%m-%d'),
+	dateParse: d3.utcParse('%Y-%m-%d'),
+	yTickFormat: (d): string => (d < 24 ? `${d - 12} pm` : `${d - 24} am`),
+	dateLabel: d3.utcFormat('%b %d, %Y'),
+	hour: (d) => `${Math.floor(d)}hr ${Math.round((d % 1) * 60)}min`,
+	pct: d3.format('.0%'),
+	time: d3.utcFormat('%-I:%M %p')
+};
 
-export const KEYS = ({
-    TIME_TO_START: "timeToStart",    
-    TIME_TO_END: "timeToEnd",    
-    STD_TIME_TO_START: "stdTimeToStart",    
-    STD_TIME_TO_END: "stdTimeToEnd",    
-})
+export const KEYS = {
+	TIME_TO_START: 'timeToStart',
+	TIME_TO_END: 'timeToEnd',
+	STD_TIME_TO_START: 'stdTimeToStart',
+	STD_TIME_TO_END: 'stdTimeToEnd'
+};
 
-export const COLOR_PALATTE = d3.schemeYlGnBu[5]
+export const COLOR_PALATTE = d3.schemeYlGnBu[5];
 // export const COLOR_PALATTE = [
 //     '#F7E733', // yellow
 //     '#52AC20', // lightgreen
@@ -37,15 +35,14 @@ export const COLOR_PALATTE = d3.schemeYlGnBu[5]
 //     '#203141' // darkblue
 // ]
 
-	// COLOR SCALE
-export const COLOR_SCALE = d3.scaleQuantize(COLOR_PALATTE)
-.domain([0, 10])
-.nice(); // sleep duration
+// COLOR SCALE
+export const COLOR_SCALE = d3.scaleQuantize(COLOR_PALATTE).domain([0, 10]).nice(); // sleep duration
 
-export const START_DATE = "2021-08-20"
+export const START_DATE = '2021-08-20';
 
-export const DATE_RANGE = d3.range(185).map((d) => { // 184 is num days of 6 months
-    const date = new Date(START_DATE); // birth date
-    date.setUTCDate(date.getUTCDate() + d);
-    return FORMATTERS.date(date);
-  })
+export const DATE_RANGE = d3.range(184).map((d) => {
+	// 184 is num days of 6 months
+	const date = new Date(START_DATE); // birth date
+	date.setUTCDate(date.getUTCDate() + d);
+	return FORMATTERS.date(date);
+});

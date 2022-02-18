@@ -19,7 +19,7 @@
 		let endDate = new Date(startDate);
 		endDate.setUTCMonth(startDate.getUTCMonth() + 1);
 
-		endDate.setUTCDate(d === 5 ? 20 : 19);
+		endDate.setUTCDate(19);
 		if ($visMode === MODES.RADIAL) {
 			const arc = d3
 				.arc()

@@ -59,10 +59,6 @@
 				}
 			}
 		}
-
-		.legend-title {
-			text-align: center;
-		}
 	}
 
 	@media (max-width: 768px) {

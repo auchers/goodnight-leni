@@ -11,7 +11,7 @@
 
 		h1 {
 			font-family: 'Poiret One', sans-serif;
-			font-size: 5em;
+			font-size: 5.5em;
 			line-height: 0.9em;
 		}
 
@@ -30,6 +30,17 @@
 			color: var(--text-yellow-shadow);
 			filter: blur(12px);
 			opacity: 0.5;
+		}
+	}
+
+	@media (max-width: 1000px) {
+		header {
+			h1 {
+				font-size: 4.1em;
+			}
+			p {
+				font-size: 18px;
+			}
 		}
 	}
 </style>

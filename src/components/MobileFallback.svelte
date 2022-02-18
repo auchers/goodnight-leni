@@ -5,12 +5,12 @@
 
 <div class="fallback">
 	<Header />
-	<div class="image-container">
-		<img src={imgURL} alt="fallback of radial barchart" />
-	</div>
 	<div class="disclaimer">
 		<p>This project was designed for larger screens.</p>
 		<p>Visit on a larger screen to explore.</p>
+	</div>
+	<div class="image-container">
+		<img src={imgURL} alt="fallback of radial barchart" />
 	</div>
 </div>
 
@@ -36,6 +36,7 @@
 		}
 
 		.disclaimer {
+			margin-top: 1.5em;
 			width: 100%;
 			text-align: center;
 			font-family: 'Poiret One', sans-serif;

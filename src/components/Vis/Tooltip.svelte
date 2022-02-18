@@ -32,7 +32,7 @@
 				style="width: {scale(hoveredLog.timeToEnd) - scale(hoveredLog.timeToStart)}px;
 				background-color:{COLOR_SCALE(dur)}"
 			/>
-			<div class="tooltip-duration">{FORMATTERS.hour(dur)} hours</div>
+			<div class="tooltip-duration">{FORMATTERS.hour(dur)}</div>
 			<div class="row">
 				<div class="tooltip-time start">{FORMATTERS.time(hoveredLog.Start)}</div>
 				<div class="tooltip-time end">{FORMATTERS.time(hoveredLog.End)}</div>
@@ -43,7 +43,7 @@
 
 <style lang="scss">
 	.tooltip {
-		--tooltip-background-color: #eee;
+		--tooltip-background-color: #fff;
 		position: absolute;
 		transition: transform 50ms, opacity 100ms;
 		min-width: 10em;
@@ -118,16 +118,16 @@
 					border: 1px solid var(--text-color-grey);
 				}
 
-				&::before,
-				&::after {
-					content: '';
-					height: 0.76em;
-					width: 1px;
-					border-left: 1px grey solid;
-					position: absolute;
-					left: -1px; // adjust for border stroke
-					transform: translateY(-25%);
-				}
+				// &::before,
+				// &::after {
+				// 	content: '';
+				// 	height: 0.76em;
+				// 	width: 1px;
+				// 	border-left: 1px grey solid;
+				// 	position: absolute;
+				// 	left: -1px; // adjust for border stroke
+				// 	transform: translateY(-25%);
+				// }
 
 				&::after {
 					left: 100%;

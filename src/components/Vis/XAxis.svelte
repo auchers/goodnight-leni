@@ -62,6 +62,7 @@
 				on:mouseleave={() => hoveredMonth.set(null)}
 			>
 				<path d={arc(null)} />
+				<path class="transparent" d={arc(null)} />
 				<text text-anchor="middle" style={textTransform(arc)} dy=".25em">{i + 1}</text>
 			</g>
 		{:else}
@@ -84,24 +85,30 @@
 		.month-arc {
 			// color: lightgrey;
 			path {
-				stroke: var(--text-color-grey);
+				stroke: var(--text-blue);
 				fill: none;
+
+				&.transparent {
+					stroke: transparent;
+					stroke-width: 50px;
+				}
 			}
+
 			text {
-				fill: var(--text-color-grey);
+				fill: var(--text-blue);
 				font-size: 0.75em;
 				cursor: default;
 				-webkit-user-select: none;
 				-moz-user-select: none;
 				-ms-user-select: none;
 				user-select: none;
-				stroke-width: 3px;
+				stroke-width: 50px;
 				stroke: transparent;
 			}
 
 			&:not(:hover) {
 				text {
-					opacity: 0.25;
+					opacity: 0;
 				}
 
 				path {

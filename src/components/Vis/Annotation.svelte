@@ -68,7 +68,7 @@
 
 		.annotation-line {
 			line {
-				stroke: var(--text-color-grey);
+				stroke: var(--text-blue);
 				// stroke-dasharray: 3 5;
 				stroke-width: 0.25px;
 			}
@@ -85,7 +85,7 @@
 		}
 
 		text {
-			fill: var(--text-color-grey);
+			fill: var(--text-blue);
 			font-weight: 200;
 			opacity: 0;
 			pointer-events: none;

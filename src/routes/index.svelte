@@ -112,7 +112,7 @@
 		height: 100vh;
 		padding: 1rem 2rem;
 		padding-right: 5em;
-		padding-bottom: 3em;
+		padding-bottom: 2em;
 	}
 
 	.left-panel {
@@ -158,12 +158,16 @@
 		&:focus {
 			outline: none;
 		}
+		&::placeholder {
+			color: var(--text-blue);
+		}
 	}
 
 	.summary {
 		font-size: 1em;
 		font-weight: 400;
 		text-align: center;
+		padding-top: 1em;
 	}
 
 	.caps {
@@ -205,13 +209,17 @@
 		cursor: pointer;
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: 1000px) {
 		.main-grid {
 			grid-template-columns: 1fr;
+			padding-right: unset;
 		}
 
 		.left-panel {
 			padding: 0.75em 0;
+			width: min-content;
+			margin: auto;
+			justify-content: space-around;
 		}
 
 		.caps,

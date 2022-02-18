@@ -46,7 +46,7 @@
 		font-weight: 200;
 
 		text {
-			fill: var(--text-color-grey);
+			fill: var(--text-blue);
 		}
 
 		.caps {
@@ -56,7 +56,7 @@
 		.tick {
 			line,
 			circle {
-				stroke: var(--text-color-grey);
+				stroke: var(--text-blue);
 				stroke-dasharray: 3 7;
 				stroke-width: 1px;
 				fill: none;

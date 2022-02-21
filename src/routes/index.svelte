@@ -15,10 +15,7 @@
 	import '../app.scss';
 
 	// DATA + TRANSFORMATIONS
-	let parsedData = d3
-		.csvParse<SleepLog>(rawData, d3.autoType)
-		.filter((d) => d.Type === 'sleep')
-		.map((d, i) => ({ ...d, id: i }));
+	let parsedData = d3.csvParse<SleepLog>(rawData, d3.autoType).map((d, i) => ({ ...d, id: i }));
 
 	/** returns [adjustedDate, [sleepLogs]]*/
 	let data = d3.groups(parsedData, (d) => FORMATTERS.date(d.aStart));

@@ -2,9 +2,11 @@
 
 Data Visualization project tracking the first six months of newborn sleep.
 
-![Screenshot of Project](./src/static/social.png)
+See the [full project here](https://projects.aucherserr.com/goodnight-leni/).
 
-Project built with [Sveltekit](https://kit.svelte.dev) using [D3](https://github.com/d3/d3/wiki).
+[![Screenshot of Project](static/social.png)](https://projects.aucherserr.com/goodnight-leni/)
+
+Built with [Sveltekit](https://kit.svelte.dev) using [D3](https://github.com/d3/d3/wiki).
 
 Data collected using [Huckleberry](https://huckleberrycare.com).
 
